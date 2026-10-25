@@ -25,6 +25,7 @@ const TR_TO_EN = {
   "Uptime · son 30 gün": "Uptime · last 30 days",
   "BUILD TICKET": "BUILD TICKET",
   "PILOT 01 · İSTANBUL": "PILOT 01 · ISTANBUL",
+  "BUILD 01 · İSTANBUL": "BUILD 01 · ISTANBUL",
   "TOPLAM": "TOTAL",
   "Ödeme yok. Erken erişim ve fiyat görüşü.": "No payment. Early access and pricing conversation only.",
   "İlk 50 GPU'luk rafı birlikte planlıyoruz. Bütçeyi ve RAM ihtiyacını soruyoruz.": "We're planning the first 50-GPU rack together. We ask about budget and RAM needs.",
@@ -202,6 +203,7 @@ const TR_TO_EN = {
   "Qwen3 14B dahil açık kaynak modeller. 16 GB GPU'da quantized 14B-32B; 2028'de 24 GB ile 70B sınıfı hedefleniyor.": "Open-source models including Qwen3 14B. Quantized 14B-32B on a 16 GB GPU; the 70B class is targeted for 24 GB in 2028.",
   "Ne zaman geliyor?": "When is it coming?",
   "İlk raf 2026 Q2: 50 GPU, İstanbul. İlk 100 waitlist sırayla kurulur; ödeme pilotta alınır.": "First rack Q2 2026: 50 GPUs, Istanbul. The first 100 waitlist members are installed in order; payment is collected in the pilot.",
+  "2026 pilotu planlanıyor. Kesin tarih ve kapasite, pilot ortaklarıyla netleşecek.": "A 2026 pilot is planned. Exact timing and capacity will be confirmed with pilot partners.",
   "İade / çıkış var mı?": "Is there a refund / exit?",
   "30 gün cayma hakkı. Sonrasında donanım senin; Covan barındırmayı durdurur, cihazı kargolar. Lease'te erken çıkış koşulları sözleşmede.": "30-day right of withdrawal. After that the hardware is yours; Covan stops hosting and ships the device. Early-exit terms for leases are in the contract.",
 
