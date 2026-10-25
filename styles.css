@@ -1579,3 +1579,10 @@ html[lang="en"] .lang-en { display: block; }
 
 .terminal-body { justify-content: flex-start; padding-top: 18px; }
 .config-disclaimer { margin-top: 14px; font-size: 9px; line-height: 1.4; color: var(--muted); }
+
+.unit-label { width: 62px; flex: 0 0 62px; display: flex; align-items: center; gap: 3px; }
+.unit-label em { font-size: 6px; padding: 1px 2px; white-space: nowrap; }
+@media (max-width: 640px) {
+  .unit-label { width: 56px; flex: 0 0 56px; font-size: 7px; }
+  .unit-label em { font-size: 5.5px; }
+}
