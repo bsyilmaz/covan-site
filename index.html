@@ -7,7 +7,7 @@
   <meta name="description" content="Covan: kendi GPU'n, bizim veri merkezimizde. Bir kez öde, limitsiz kullan, boşta kiralayıp bakımını öde.">
   <meta name="theme-color" content="#111111">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 
@@ -404,16 +404,17 @@
       <div class="config-main">
         <div class="config-head">
           <div>
-            <span class="label" data-i18n="config.budgetLabel">BÜTÇENİZ</span>
-            <p class="config-hint" data-i18n="config.budgetHint">1.000–50.000 $ arası bir sistem seçin.</p>
+            <span class="label" data-i18n="config.gpuTier">GPU SEVİYESİ</span>
+            <p class="config-hint" data-i18n="config.gpuHint">1.000–50.000 $ arası GPU seviyesi seçin; RAM ve disk ekleyin.</p>
           </div>
           <div class="config-total">
             <b id="budgetValue">$7.000</b>
-            <em data-i18n="config.budgetNote">tahmini bütçe</em>
+            <em data-i18n="config.priceNote">tahmini fiyat</em>
+            <span class="price-breakdown" id="priceBreakdown">GPU $7.000 · RAM +$0 · Disk +$0</span>
           </div>
         </div>
 
-        <input class="budget-slider" id="budgetSlider" type="range" min="1000" max="50000" step="500" value="7000" aria-label="Sistem bütçesi">
+        <input class="budget-slider" id="budgetSlider" type="range" min="1000" max="50000" step="500" value="7000" aria-label="GPU seviyesi">
         <div class="slider-labels">
           <span style="left:0;transform:none;">$1K</span>
           <span style="left:8.16%;">$5K</span>
@@ -458,7 +459,7 @@
           <div><span>GPU</span><b id="sumGpu">48 GB</b></div>
           <div><span>RAM</span><b id="sumRam">256 GB</b></div>
           <div><span data-i18n="config.disk">Disk</span><b id="sumStorage">8 TB</b></div>
-          <div><span data-i18n="config.budget">Bütçe</span><b id="sumBudget">$7.000</b></div>
+          <div><span data-i18n="config.total">Toplam</span><b id="sumBudget">$7.000</b></div>
         </div>
 
         <div class="waitlist-actions">
@@ -554,7 +555,7 @@
     <div class="eyebrow">WAITLIST</div>
     <h3 id="modalTitle">Waitlist'e katıl.</h3>
     <p class="modal-sub">Ödeme yok. İlk rafa adını yaz; hangi sistemi istediğini soruyoruz.</p>
-    <div class="selected-plan" id="selectedConfig">48 GB GPU · 256 GB RAM · 8 TB · $7.000 bütçe</div>
+    <div class="selected-plan" id="selectedConfig">48 GB GPU · 256 GB RAM · 8 TB · $7.000 toplam</div>
     <form id="preorderForm">
       <label>Ad Soyad<input id="nameInput" type="text" placeholder="Adın Soyadın" required></label>
       <label>E-posta<input id="emailInput" type="email" placeholder="ornek@mail.com" required></label>
@@ -568,7 +569,7 @@
     <div class="modal-success" id="modalSuccess" hidden>
       <div class="success-icon"><svg><use href="#i-check"/></svg></div>
       <h4>Adını ilk rafa yazdık.</h4>
-      <p id="successText">48 GB GPU · 256 GB RAM · 8 TB · $7.000 bütçe</p>
+      <p id="successText">48 GB GPU · 256 GB RAM · 8 TB · $7.000 toplam</p>
       <button class="btn btn-ghost btn-block" data-close-modal>Kapat</button>
     </div>
   </div>
@@ -896,8 +897,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=7"></script>
-<script src="app.js?v=7"></script>
+<script src="i18n.js?v=10"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>
 

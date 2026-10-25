@@ -10,7 +10,7 @@ Covan; kullanıcının kendi GPU'sunu Covan'ın veri merkezinde barındırdığ�
 
 - **Landing:** problem, çözüm, CovanOS, kazanç, güven, SSS.
 - **TR / EN:** sağ üstteki `EN` / `TR` düğmesi. Dil tercihi `localStorage` ve `?lang=en` ile korunur.
-- **Sistem yapılandırıcısı:** $1.000–$50.000 slider; GPU seviyesi, RAM (64 GB–1 TB) ve depolama (2–32 TB) seçimi. Seçim özeti anlık güncellenir.
+- **Sistem yapılandırıcısı:** $1.000–$50.000 slider; GPU seviyesi, RAM (64 GB–1 TB) ve depolama (2–32 TB) seçimi. Toplam fiyat, RAM ve depolama yükseltmelerine göre anlık güncellenir.
 - **Waitlist:** “Ön sipariş” yok. Form; ad, e-posta, şehir ve **“Ne kadar ödemeyi düşünürsünüz?”** sorusunu sorar. Ödeme alınmaz.
 - **CovanOS demosu:** sohbet ekranı + panel (Genel Bakış, Pazar Yeri, Kazanç, Güven). Mobilde `Panel` / `Sohbet` düğmesiyle erişilir.
 - **Kira / kazanç simülasyonu:** %30 / %40 / %50 doluluk; sahip neti ve geri ödeme süresi güncellenir.

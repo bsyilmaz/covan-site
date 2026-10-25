@@ -1307,3 +1307,13 @@ body.modal-open .scroll-progress { z-index: 90; }
   .market-grid, .payout-grid { grid-template-columns: 1fr; }
   .app-nav button.active { background: #1D1D1D; color: var(--yellow); }
 }
+
+.price-breakdown {
+  display: block;
+  margin-top: 4px;
+  font-size: 8px;
+  line-height: 1.35;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0;
+}

@@ -420,15 +420,18 @@ updateUtil(40);
 
 /* ---------- configurator / waitlist ---------- */
 const CONFIG_TIERS = [
-  { min: 1000, max: 2499, gpu: '16 GB', ram: 64, storage: 2, note: 'Bireysel başlangıç', noteEn: 'Individual starter' },
-  { min: 2500, max: 5999, gpu: '24 GB', ram: 128, storage: 4, note: 'Kreatif / geliştirici', noteEn: 'Creative / developer' },
-  { min: 6000, max: 11999, gpu: '48 GB', ram: 256, storage: 8, note: 'Fine-tuning / yoğun inference', noteEn: 'Fine-tuning / heavy inference' },
-  { min: 12000, max: 19999, gpu: '80 GB', ram: 512, storage: 16, note: 'Büyük model / ekip', noteEn: 'Large model / team' },
-  { min: 20000, max: 34999, gpu: '2×80 GB', ram: 512, storage: 16, note: 'Küme / kurumsal pilot', noteEn: 'Cluster / enterprise pilot' },
-  { min: 35000, max: 50000, gpu: '4×80 GB', ram: 1024, storage: 32, note: 'Rack / üretim', noteEn: 'Rack / production' },
+  { min: 1000, max: 2499, gpu: '16 GB', ram: 64, storage: 2, price: 1000, note: 'Bireysel başlangıç', noteEn: 'Individual starter' },
+  { min: 2500, max: 5999, gpu: '24 GB', ram: 128, storage: 4, price: 2500, note: 'Kreatif / geliştirici', noteEn: 'Creative / developer' },
+  { min: 6000, max: 11999, gpu: '48 GB', ram: 256, storage: 8, price: 7000, note: 'Fine-tuning / yoğun inference', noteEn: 'Fine-tuning / heavy inference' },
+  { min: 12000, max: 19999, gpu: '80 GB', ram: 512, storage: 16, price: 15000, note: 'Büyük model / ekip', noteEn: 'Large model / team' },
+  { min: 20000, max: 34999, gpu: '2×80 GB', ram: 512, storage: 16, price: 25000, note: 'Küme / kurumsal pilot', noteEn: 'Cluster / enterprise pilot' },
+  { min: 35000, max: 50000, gpu: '4×80 GB', ram: 1024, storage: 32, price: 45000, note: 'Rack / üretim', noteEn: 'Rack / production' },
 ];
 
-const config = { budget: 7000, gpu: '48 GB', ram: 256, storage: 8, note: 'Fine-tuning / yoğun inference' };
+const RAM_PRICES = { 64: 0, 128: 300, 256: 900, 512: 2400, 1024: 5500 };
+const STORAGE_PRICES = { 2: 0, 4: 150, 8: 450, 16: 1200, 32: 2800 };
+
+const config = { budget: 7000, price: 7000, gpu: '48 GB', ram: 256, storage: 8, note: 'Fine-tuning / yoğun inference' };
 
 const money = (n) => `$${Number(n).toLocaleString(currentLang === 'en' ? 'en-US' : 'tr-TR')}`;
 const ramLabel = (gb) => (gb >= 1024 ? '1 TB' : `${gb} GB`);
@@ -444,8 +447,8 @@ function setActiveChip(containerSelector, attr, value) {
 }
 
 function configText() {
-  const budgetWord = currentLang === 'en' ? 'budget' : 'bütçe';
-  return `${config.gpu} GPU · ${ramLabel(config.ram)} RAM · ${config.storage} TB · ${money(config.budget)} ${budgetWord}`;
+  const totalWord = currentLang === 'en' ? 'total' : 'toplam';
+  return `${config.gpu} GPU · ${ramLabel(config.ram)} RAM · ${config.storage} TB · ${money(config.price)} ${totalWord}`;
 }
 
 function renderConfig(resetChips = false) {
@@ -457,6 +460,10 @@ function renderConfig(resetChips = false) {
     config.storage = tier.storage;
   }
 
+  const ramDelta = RAM_PRICES[config.ram] - RAM_PRICES[tier.ram];
+  const storageDelta = STORAGE_PRICES[config.storage] - STORAGE_PRICES[tier.storage];
+  config.price = tier.price + ramDelta + storageDelta;
+
   const budgetValue = $('#budgetValue');
   const sumBudget = $('#sumBudget');
   const configGpu = $('#configGpu');
@@ -464,14 +471,20 @@ function renderConfig(resetChips = false) {
   const sumGpu = $('#sumGpu');
   const sumRam = $('#sumRam');
   const sumStorage = $('#sumStorage');
+  const breakdown = $('#priceBreakdown');
 
-  if (budgetValue) budgetValue.textContent = money(config.budget);
-  if (sumBudget) sumBudget.textContent = money(config.budget);
+  if (budgetValue) budgetValue.textContent = money(config.price);
+  if (sumBudget) sumBudget.textContent = money(config.price);
   if (configGpu) configGpu.textContent = `${config.gpu} GPU`;
   if (configNote) configNote.textContent = config.note;
   if (sumGpu) sumGpu.textContent = config.gpu;
   if (sumRam) sumRam.textContent = ramLabel(config.ram);
   if (sumStorage) sumStorage.textContent = `${config.storage} TB`;
+  if (breakdown) {
+    const signed = (n) => (n >= 0 ? `+${money(n)}` : `−${money(Math.abs(n))}`);
+    const diskWord = currentLang === 'en' ? 'Storage' : 'Disk';
+    breakdown.textContent = `GPU ${money(tier.price)} · RAM ${signed(ramDelta)} · ${diskWord} ${signed(storageDelta)}`;
+  }
 
   const slider = $('#budgetSlider');
   if (slider) {
@@ -487,6 +500,7 @@ const budgetSlider = $('#budgetSlider');
 budgetSlider?.addEventListener('input', () => {
   config.budget = Number(budgetSlider.value);
   renderConfig(true);
+  updateSelectedConfig();
 });
 $$('#ramChips .chip').forEach((chip) => {
   chip.addEventListener('click', () => {
@@ -515,7 +529,7 @@ function updateSelectedConfig() {
 function openModal() {
   updateSelectedConfig();
   const wtp = $('#wtpInput');
-  if (wtp) wtp.value = config.budget;
+  if (wtp) wtp.value = config.price;
   $('#preorderForm').hidden = false;
   $('#modalSuccess').hidden = true;
   modal.classList.add('open');
@@ -533,11 +547,9 @@ $$('[data-close-modal]').forEach((btn) => btn.addEventListener('click', closeMod
 
 $('#wtpInput')?.addEventListener('input', () => {
   const value = Number($('#wtpInput').value);
-  if (Number.isFinite(value) && value >= 1000 && value <= 50000) {
-    config.budget = value;
-    renderConfig(true);
-    updateSelectedConfig();
-    if (budgetSlider) budgetSlider.value = String(value);
+  const success = $('#successText');
+  if (Number.isFinite(value) && value >= 1000 && value <= 50000 && success) {
+    success.textContent = `${configText()} · ${msg('teklif', 'offer')} ${money(value)}`;
   }
 });
 
@@ -549,9 +561,11 @@ $('#preorderForm')?.addEventListener('submit', (e) => {
     return;
   }
   const wtp = Number($('#wtpInput').value);
-  if (Number.isFinite(wtp) && wtp >= 1000 && wtp <= 50000) config.budget = wtp;
-  renderConfig(false);
   updateSelectedConfig();
+  const success = $('#successText');
+  if (success && Number.isFinite(wtp) && wtp >= 1000 && wtp <= 50000) {
+    success.textContent = `${configText()} · ${msg('teklif', 'offer')} ${money(wtp)}`;
+  }
   $('#preorderForm').hidden = true;
   $('#modalSuccess').hidden = false;
   toast(msg(`Teşekkürler ${name.split(' ')[0]}, adını ilk rafa yazdık.`, `Thanks ${name.split(' ')[0]}, we've added your name to the first rack.`));
