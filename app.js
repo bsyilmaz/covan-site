@@ -383,7 +383,7 @@ $('#preorderForm')?.addEventListener('submit', (e) => {
   }
   const wtp = Number($('#wtpInput').value);
   if (Number.isFinite(wtp) && wtp >= 1000 && wtp <= 50000) config.budget = wtp;
-  renderConfig(true);
+  renderConfig(false);
   updateSelectedConfig();
   $('#preorderForm').hidden = true;
   $('#modalSuccess').hidden = false;
