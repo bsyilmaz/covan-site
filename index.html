@@ -7,9 +7,11 @@
   <meta name="description" content="Covan: kendi GPU'n, bizim veri merkezimizde. Bir kez öde, limitsiz kullan, boşta kiralayıp bakımını öde.">
   <meta name="theme-color" content="#111111">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
   <symbol id="logo" viewBox="0 0 150 170">
@@ -29,6 +31,15 @@
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16v10.5H9l-5 4V5.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9.5h8M8 12.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 11.5a6.5 6.5 0 0013 0M12 18v3M9 21h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 6.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 5v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.2L20 10l-5.8 1.8L12 18l-2.2-6.2L4 10l5.8-1.8L12 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
 </svg>
 
 <header class="site-header" id="siteHeader">
@@ -78,6 +89,7 @@
 
       <div class="hero-visual reveal">
         <div class="rack-stage">
+          <div class="live-badge">canlı demo</div>
           <div class="rack-glow"></div>
           <div class="rack" aria-hidden="true">
             <div class="rack-top"><span></span><span></span><span></span></div>
@@ -140,7 +152,7 @@
       </div>
 
       <div class="chat-card reveal">
-        <div class="chat-head"><span class="chat-dots"><i></i><i></i><i></i></span><span>Bulut yapay zekâ</span></div>
+        <div class="chat-head"><span class="chat-dots"><i></i><i></i><i></i></span><span>Bulut yapay zekâ</span><span class="chat-limit">limitli</span></div>
         <div class="chat-body">
           <div class="msg user">Rapor taslağını bitirelim, son 3 bölüm kaldı.</div>
           <div class="msg system"><b>Sistem</b>Mesaj sınırına ulaştınız. 4 saat sonra tekrar deneyin.</div>
@@ -210,7 +222,7 @@
     <div class="container os-grid">
       <div class="reveal">
         <div class="eyebrow light">COVANOS</div>
-        <h2>Kendi GPU'nda,<br><span class="hl">kendi işin.</span></h2>
+        <h2 class="h2-sm">Kendi GPU'nda,<br><span class="hl">kendi işin.</span></h2>
         <p class="lead light">Bildiğin sohbet arayüzü. Ama model senin kutunda, verin senin diskinde.</p>
 
         <ul class="feature-list">
@@ -241,6 +253,7 @@
             <div class="gpu-card">
               <b>GPU #0427</b>
               <span>16 GB · İstanbul-1</span>
+              <div class="gpu-meter"><i style="width:38%"></i></div>
               <em>● Çevrimiçi · sende</em>
             </div>
           </aside>
@@ -249,6 +262,7 @@
               <span class="model-pill">Qwen3 14B · senin GPU'nda</span>
               <span class="os-meta">Kullanım: <b>limitsiz</b></span>
               <span class="os-meta">Depolama: <b>şifreli, sende</b></span>
+              <span class="os-conf"><svg><use href="#i-shield"/></svg> Confidential</span>
             </div>
             <div class="os-chat">
               <div class="msg user">Toplantı notlarımı 5 maddede özetle. <span class="file">toplanti_notlari.txt · 14 KB</span></div>
@@ -264,6 +278,7 @@
               </div>
               <div class="typing" hidden><i></i><i></i><i></i></div>
             </div>
+            <div class="os-quick"><span>Özetle</span><span>Kod yaz</span><span>Sözleşme</span><span>Kira planı</span></div>
             <div class="os-input">Covan'a sor <span>↑</span></div>
           </div>
         </div>
@@ -460,6 +475,7 @@
           <span class="label yellow" data-i18n="config.why">NEDEN WAITLIST?</span>
           <h3 data-i18n="config.whyTitle">İlk 50 GPU'luk rafı birlikte planlıyoruz.</h3>
           <p data-i18n="config.whyText">Hangi konfigürasyonun gerçekten istendiğini görmek için bütçeyi ve RAM ihtiyacını soruyoruz.</p>
+          <div class="config-side-foot"><span>PILOT 01</span><span>İSTANBUL</span></div>
         </div>
       </aside>
     </div>
@@ -567,52 +583,113 @@
         <span>covan<em>OS</em></span>
         <button class="app-close" data-close-app aria-label="Kapat"><svg><use href="#i-close"/></svg></button>
       </div>
-      <nav class="app-nav">
-        <button class="active" data-view="chat">Sohbet</button>
-        <button data-view="panel">Panel</button>
-      </nav>
-      <div class="app-history">
-        <div class="side-label">Bugün</div>
-        <button class="side-item active">Toplantı özeti</button>
-        <button class="side-item">Sunum taslağı</button>
-        <div class="side-label">Bu hafta</div>
-        <button class="side-item">Python hata ayıklama</button>
-        <button class="side-item">Kira sözleşmesi notları</button>
-        <button class="side-item">Ankara gezi planı</button>
+
+      <div class="app-workspace">
+        <div class="workspace-avatar">SB</div>
+        <div class="workspace-copy"><b>Kişisel alan</b><span>Selim · Pro</span></div>
+        <button class="workspace-menu" aria-label="Çalışma alanı menüsü"><svg><use href="#i-dots"/></svg></button>
       </div>
+
+      <label class="app-search">
+        <svg><use href="#i-search"/></svg>
+        <input id="chatSearch" type="search" placeholder="Sohbetlerde ara..." autocomplete="off">
+        <kbd>⌘K</kbd>
+      </label>
+
+      <button class="new-chat" id="newChatBtn"><svg><use href="#i-plus"/></svg> Yeni sohbet <kbd>⌘N</kbd></button>
+
+      <nav class="app-nav">
+        <button class="active" data-view="chat"><svg><use href="#i-chat"/></svg> Sohbet</button>
+        <button data-view="panel"><svg><use href="#i-grid"/></svg> Panel</button>
+      </nav>
+
+      <div class="app-history" id="appHistory">
+        <div class="side-label">Bugün</div>
+        <button class="side-item active"><span>Toplantı özeti</span><em>12:04</em></button>
+        <button class="side-item"><span>Sunum taslağı</span><em>09:18</em></button>
+        <div class="side-label">Bu hafta</div>
+        <button class="side-item"><span>Python hata ayıklama</span><em>Sal</em></button>
+        <button class="side-item"><span>Kira sözleşmesi notları</span><em>Pzt</em></button>
+        <button class="side-item"><span>Ankara gezi planı</span><em>Paz</em></button>
+      </div>
+
       <div class="app-gpu">
-        <b>GPU #0427</b>
+        <div class="app-gpu-top"><b>GPU #0427</b><span class="online-dot"></span></div>
         <span>16 GB · İstanbul-1</span>
-        <em>● Çevrimiçi · sende</em>
+        <div class="gpu-meter"><i style="width:38%"></i></div>
+        <div class="gpu-meta"><em>● Çevrimiçi · sende</em><span>%38</span></div>
       </div>
     </aside>
 
     <main class="app-main">
       <div class="app-topbar">
-        <span class="app-model">Qwen3 14B · senin GPU'nda</span>
-        <span class="app-badge">Kullanım: limitsiz</span>
-        <span class="app-badge">Depolama: şifreli, sende</span>
+        <div class="model-wrap">
+          <button class="model-select" id="modelSelect" aria-haspopup="listbox" aria-expanded="false">
+            <span class="model-dot"></span>
+            <span id="modelName">Qwen3 14B</span>
+            <svg><use href="#i-chev"/></svg>
+          </button>
+          <div class="model-menu" id="modelMenu">
+            <button class="active" data-model="Qwen3 14B"><span>Qwen3 14B</span><em>hızlı</em></button>
+            <button data-model="Llama 3.3 70B"><span>Llama 3.3 70B</span><em>güçlü</em></button>
+            <button data-model="Mistral Small"><span>Mistral Small</span><em>hafif</em></button>
+          </div>
+        </div>
+        <span class="app-badge confidential"><svg><use href="#i-shield"/></svg> Confidential</span>
+        <span class="app-badge">limitsiz</span>
         <button class="rent-toggle" id="rentToggle">Kira modu: kapalı</button>
         <button class="app-panel-btn" id="appPanelBtn">Panel</button>
       </div>
 
       <section class="app-view active" data-panel-view="chat">
-        <div class="app-chat" id="appChat">
-          <div class="msg user">Toplantı notlarımı 5 maddede özetle. <span class="file">toplanti_notlari.txt · 14 KB</span></div>
-          <div class="msg bot">
-            <div class="bot-avatar"><svg><use href="#logo"/></svg></div>
-            <ol>
-              <li>Lansman tarihi 12 Kasım olarak kesinleşti.</li>
-              <li>Pazarlama bütçesi yüzde 10 artırıldı.</li>
-              <li>Tasarım ekibine iki kişi katılıyor.</li>
-              <li>Müşteri demosu cuma günü yapılacak.</li>
-              <li>Sonraki toplantı pazartesi saat 10:00.</li>
-            </ol>
+        <div class="chat-head">
+          <div>
+            <h3 id="chatTitle">Toplantı özeti</h3>
+            <p id="chatSub">5 mesaj · 14 KB · senin GPU'nda</p>
+          </div>
+          <div class="chat-actions">
+            <button class="icon-btn" data-action="share" aria-label="Paylaş"><svg><use href="#i-share"/></svg></button>
+            <button class="icon-btn" data-action="export" aria-label="Dışa aktar"><svg><use href="#i-refresh"/></svg></button>
           </div>
         </div>
+
+        <div class="app-chat" id="appChat">
+          <div class="msg user">
+            Toplantı notlarımı 5 maddede özetle.
+            <span class="file">toplanti_notlari.txt · 14 KB</span>
+            <span class="msg-time">12:03</span>
+          </div>
+          <div class="msg bot">
+            <div class="bot-avatar"><svg><use href="#logo"/></svg></div>
+            <div class="bot-text">
+              <div class="msg-meta">CovanOS · Qwen3 14B <span>12:04</span></div>
+              <ol>
+                <li>Lansman tarihi 12 Kasım olarak kesinleşti.</li>
+                <li>Pazarlama bütçesi yüzde 10 artırıldı.</li>
+                <li>Tasarım ekibine iki kişi katılıyor.</li>
+                <li>Müşteri demosu cuma günü yapılacak.</li>
+                <li>Sonraki toplantı pazartesi saat 10:00.</li>
+              </ol>
+              <div class="msg-actions">
+                <button data-copy>Kopyala</button>
+                <button data-regen>Yeniden üret</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-row" id="quickRow">
+          <button data-prompt="Toplantı notlarımı 5 maddede özetle." data-prompt-en="Summarize my meeting notes in 5 bullets."><svg><use href="#i-spark"/></svg> Özetle</button>
+          <button data-prompt="Bu kodda hata var mı? Python ile düzelt." data-prompt-en="Is there a bug in this code? Fix it in Python."><svg><use href="#i-spark"/></svg> Kod yaz</button>
+          <button data-prompt="Bu sözleşmedeki riskli maddeleri çıkar." data-prompt-en="Extract the risky clauses from this contract.">Sözleşme analiz et</button>
+          <button data-prompt="Kira modunu aç ve bu ayki kazancı hesapla." data-prompt-en="Turn on rental mode and calculate this month's earnings.">Kira planı</button>
+        </div>
+
         <form class="app-input" id="chatForm">
+          <button type="button" class="input-icon" aria-label="Dosya ekle"><svg><use href="#i-plus"/></svg></button>
           <input id="chatInput" type="text" placeholder="Covan'a sor..." autocomplete="off">
-          <button type="submit" aria-label="Gönder">↑</button>
+          <button type="button" class="input-icon" aria-label="Mikrofon"><svg><use href="#i-mic"/></svg></button>
+          <button type="submit" class="send-btn" aria-label="Gönder">↑</button>
         </form>
         <p class="app-note">Model senin kutunda çalışıyor. Bu prototipte yanıtlar temsilîdir.</p>
       </section>
@@ -626,13 +703,56 @@
         </div>
 
         <div class="panel active" data-panel="overview">
-          <div class="panel-head"><div><h3>Genel Bakış</h3><p>Kutun çalışıyor. Veri sende.</p></div><span class="status-pill">● Aktif</span></div>
-          <div class="stat-grid">
-            <div class="stat"><span>Kullanım</span><b>%38</b><em>son 24 saat</em></div>
-            <div class="stat"><span>Bu ay kazanç</span><b>$55</b><em>+$30 net</em></div>
-            <div class="stat"><span>Veri cihazda</span><b>100%</b><em>0 dışarı aktarım</em></div>
-            <div class="stat"><span>Uptime</span><b>99,9%</b><em>son 30 gün</em></div>
+          <div class="panel-head">
+            <div><h3>Genel Bakış</h3><p>Kutun çalışıyor. Veri sende.</p></div>
+            <div class="panel-actions">
+              <select class="date-select" aria-label="Tarih aralığı">
+                <option>Son 30 gün</option>
+                <option>Son 7 gün</option>
+                <option>Son 24 saat</option>
+              </select>
+              <button class="btn btn-small btn-ghost" data-action="export">Dışa aktar</button>
+              <span class="status-pill">● Aktif</span>
+            </div>
           </div>
+
+          <div class="stat-grid">
+            <div class="stat">
+              <span>Kullanım</span><b>%38</b><em>son 24 saat</em>
+              <div class="spark"><i style="height:35%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:68%"></i><i style="height:58%"></i><i style="height:76%"></i></div>
+            </div>
+            <div class="stat">
+              <span>Bu ay kazanç</span><b>$55</b><em>+$30 net</em>
+              <div class="spark"><i style="height:24%"></i><i style="height:38%"></i><i style="height:46%"></i><i style="height:42%"></i><i style="height:64%"></i><i style="height:72%"></i></div>
+            </div>
+            <div class="stat">
+              <span>Veri cihazda</span><b>100%</b><em>0 dışarı aktarım</em>
+              <div class="spark"><i style="height:100%"></i><i style="height:100%"></i><i style="height:100%"></i><i style="height:100%"></i><i style="height:100%"></i><i style="height:100%"></i></div>
+            </div>
+            <div class="stat">
+              <span>Uptime</span><b>99,9%</b><em>son 30 gün</em>
+              <div class="spark"><i style="height:88%"></i><i style="height:92%"></i><i style="height:90%"></i><i style="height:96%"></i><i style="height:94%"></i><i style="height:99%"></i></div>
+            </div>
+          </div>
+
+          <div class="panel-grid usage-grid">
+            <div class="panel-card usage-card">
+              <div class="card-head"><h4>GPU kullanımı</h4><span>son 7 gün</span></div>
+              <div class="usage-bars">
+                <i style="height:34%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:61%"></i><i style="height:55%"></i><i style="height:72%"></i><i style="height:64%"></i>
+              </div>
+              <div class="usage-labels"><span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span></div>
+            </div>
+            <div class="panel-card activity-card">
+              <div class="card-head"><h4>Son işler</h4><span class="live-pill">canlı</span></div>
+              <div class="activity">
+                <div><span class="dot ok"></span><b>Batch inference</b><em>12 dk · $84</em></div>
+                <div><span class="dot ok"></span><b>Fine-tuning</b><em>48 dk · $210</em></div>
+                <div><span class="dot wait"></span><b>Render</b><em>sırada · $62</em></div>
+              </div>
+            </div>
+          </div>
+
           <div class="panel-grid">
             <div class="panel-card">
               <h4>Uygulamalar</h4>
@@ -646,15 +766,30 @@
             </div>
             <div class="panel-card dark-card">
               <h4>API anahtarı</h4>
-              <code>sk-covan-••••-0427</code>
+              <code>sk-covan-”¢”¢”¢”¢-0427</code>
               <button class="btn btn-small btn-primary" id="copyKey"><svg><use href="#i-copy"/></svg> Kopyala</button>
               <p>OpenAI uyumlu endpoint. Kendi uygulamana bağla.</p>
+            </div>
+          </div>
+
+          <div class="panel-card model-card">
+            <div class="card-head"><h4>Modeller</h4><span>3 hazır</span></div>
+            <div class="model-chips">
+              <button class="model-chip active" data-model-chip="Qwen3 14B"><b>Qwen3 14B</b><span>hızlı · 14B</span></button>
+              <button class="model-chip" data-model-chip="Llama 3.3 70B"><b>Llama 3.3 70B</b><span>güçlü · 70B</span></button>
+              <button class="model-chip" data-model-chip="Mistral Small"><b>Mistral Small</b><span>hafif · 24B</span></button>
             </div>
           </div>
         </div>
 
         <div class="panel" data-panel="market">
-          <div class="panel-head"><div><h3>Pazar Yeri</h3><p>Boşta kalan GPU'yu seçilmiş kiracılara aç.</p></div><button class="rent-toggle" id="rentToggle2">Kira modu: kapalı</button></div>
+          <div class="panel-head">
+            <div><h3>Pazar Yeri</h3><p>Boşta kalan GPU'yu seçilmiş kiracılara aç.</p></div>
+            <div class="panel-actions">
+              <button class="btn btn-small btn-ghost" data-action="rules">Kurallar</button>
+              <button class="rent-toggle" id="rentToggle2">Kira modu: kapalı</button>
+            </div>
+          </div>
           <div class="market-hero">
             <div><span class="label">BU AY TAHMİNİ</span><b>$55</b><em>%40 doluluk · 16 GB GPU</em></div>
             <div class="market-toggle"><span>Boşta kazan</span><button class="switch" id="marketSwitch" aria-label="Boşta kazan"><i></i></button></div>
@@ -665,10 +800,39 @@
             <div class="job"><span class="job-type">Render</span><span>Stüdyo · 26 dk</span><b>$62</b><em class="pending">○ sırada</em></div>
           </div>
           <p class="panel-note">Kiracı yalnızca işlem gücünü kullanır. İş bitince konteyner silinir.</p>
+
+          <div class="panel-grid market-grid">
+            <div class="panel-card">
+              <div class="card-head"><h4>Kira geliri</h4><span>son 7 gün</span></div>
+              <div class="usage-bars small">
+                <i style="height:22%"></i><i style="height:35%"></i><i style="height:28%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:66%"></i><i style="height:58%"></i>
+              </div>
+              <div class="usage-labels"><span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span></div>
+            </div>
+            <div class="panel-card">
+              <div class="card-head"><h4>Nasıl çalışır?</h4></div>
+              <div class="rule-list">
+                <div><span>01</span><p>KYC'li kiracılar; her iş yükü taranır.</p></div>
+                <div><span>02</span><p>Konteyner izole; iş bitince silinir.</p></div>
+                <div><span>03</span><p>Gelir otomatik hesaplanır ve yatar.</p></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="panel" data-panel="earnings">
-          <div class="panel-head"><div><h3>Kazanç</h3><p>Kira geliri, bakım ve ödeme.</p></div><span class="status-pill">● Ödendi</span></div>
+          <div class="panel-head">
+            <div><h3>Kazanç</h3><p>Kira geliri, bakım ve ödeme.</p></div>
+            <div class="panel-actions">
+              <select class="date-select" aria-label="Dönem">
+                <option>Bu ay</option>
+                <option>Geçen ay</option>
+                <option>Son 6 ay</option>
+              </select>
+              <button class="btn btn-small btn-ghost" data-action="export">Dışa aktar</button>
+              <span class="status-pill">● Ödendi</span>
+            </div>
+          </div>
           <div class="stat-grid">
             <div class="stat"><span>Kira gelirin</span><b>$55</b><em>70% sahip payı</em></div>
             <div class="stat"><span>Bakım</span><b>−$25</b><em>elektrik + destek</em></div>
@@ -676,19 +840,48 @@
             <div class="stat"><span>Geri ödeme</span><b>~14 ay</b><em>16 GB örnek</em></div>
           </div>
           <div class="panel-card">
-            <h4>Son 6 ay</h4>
+            <div class="card-head"><h4>Son 6 ay</h4><span>kira geliri</span></div>
             <div class="mini-bars"><i style="height:32%"></i><i style="height:44%"></i><i style="height:38%"></i><i style="height:56%"></i><i style="height:61%"></i><i style="height:70%"></i></div>
             <div class="bar-labels"><span>May</span><span>Haz</span><span>Tem</span><span>Ağu</span><span>Eyl</span><span>Eki</span></div>
+          </div>
+          <div class="panel-grid payout-grid">
+            <div class="panel-card">
+              <div class="card-head"><h4>Ödeme geçmişi</h4><span>son 3 ay</span></div>
+              <div class="payout-list">
+                <div><span>Ekim 2026</span><b>$30</b><em>ödendi</em></div>
+                <div><span>Eylül 2026</span><b>$26</b><em>ödendi</em></div>
+                <div><span>Ağustos 2026</span><b>$18</b><em>ödendi</em></div>
+              </div>
+            </div>
+            <div class="panel-card dark-card">
+              <h4>Sonraki ödeme</h4>
+              <div class="next-pay"><b>$30</b><span>1 Kasım · banka hesabı</span></div>
+              <p>Kira geliri her ayın 1'inde otomatik yatar.</p>
+            </div>
           </div>
           <button class="btn btn-primary" id="payoutBtn">Ödemeyi al</button>
         </div>
 
         <div class="panel" data-panel="trust">
-          <div class="panel-head"><div><h3>Güven</h3><p>Kanıtlar, silme ve denetim.</p></div><span class="status-pill">● Doğrulandı</span></div>
+          <div class="panel-head">
+            <div><h3>Güven</h3><p>Kanıtlar, silme ve denetim.</p></div>
+            <div class="panel-actions">
+              <button class="btn btn-small btn-ghost" data-action="report">Rapor</button>
+              <span class="status-pill">● Doğrulandı</span>
+            </div>
+          </div>
           <div class="trust-cards">
             <div class="trust-card"><span class="label">TEE</span><b>Attestation</b><p>Kutu, doğru yazılımı çalıştırdığını kanıtladı.</p><em>son kontrol: 2 dk önce</em></div>
             <div class="trust-card"><span class="label">DATA</span><b>Silme sertifikası</b><p>Son kiracı işi 18:42'de silindi.</p><em>kanıt: 0x8f…42c</em></div>
             <div class="trust-card"><span class="label">AUDIT</span><b>Denetim izi</b><p>3 olay; yetkisiz erişim yok.</p><em>son 24 saat</em></div>
+          </div>
+          <div class="panel-card audit-card">
+            <div class="card-head"><h4>Denetim kaydı</h4><span>son 24 saat</span></div>
+            <div class="audit-list">
+              <div><span>12:04</span><b>Kiracı işi tamamlandı</b><em>#J-8842</em></div>
+              <div><span>12:04</span><b>Konteyner silindi</b><em>kanıt 0x8f…42c</em></div>
+              <div><span>09:18</span><b>Attestation yenilendi</b><em>TEE · NVIDIA CC</em></div>
+            </div>
           </div>
           <div class="panel-card dark-card">
             <h4>Trust Center</h4>
@@ -703,7 +896,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="i18n.js"></script>
-<script src="app.js"></script>
+<script src="i18n.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
+

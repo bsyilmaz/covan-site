@@ -27,6 +27,16 @@ function toast(message) {
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
 }
 
+const progressEl = $('#scrollProgress');
+function updateScrollProgress() {
+  if (!progressEl) return;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  progressEl.style.width = max > 0 ? `${Math.min(100, Math.max(0, (window.scrollY / max) * 100))}%` : '0%';
+}
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+window.addEventListener('resize', updateScrollProgress);
+updateScrollProgress();
+
 function lockScroll() {
   body.style.overflow = 'hidden';
 }
@@ -143,17 +153,32 @@ const chatInput = $('#chatInput');
 function chatScroll() {
   if (chat) chat.scrollTop = chat.scrollHeight;
 }
+function clock() {
+  return new Date().toLocaleTimeString(currentLang === 'en' ? 'en-GB' : 'tr-TR', { hour: '2-digit', minute: '2-digit' });
+}
 function addUser(text) {
   const el = document.createElement('div');
   el.className = 'msg user';
   el.textContent = text;
+  const time = document.createElement('span');
+  time.className = 'msg-time';
+  time.textContent = clock();
+  el.appendChild(time);
   chat.appendChild(el);
   chatScroll();
 }
 function addBot(html) {
   const el = document.createElement('div');
   el.className = 'msg bot';
-  el.innerHTML = `<div class="bot-avatar"><svg><use href="#logo"></use></svg></div><div class="bot-text">${html}</div>`;
+  const model = $('#modelName')?.textContent || 'Qwen3 14B';
+  const copy = currentLang === 'en' ? 'Copy' : 'Kopyala';
+  const regen = currentLang === 'en' ? 'Regenerate' : 'Yeniden üret';
+  el.innerHTML = `<div class="bot-avatar"><svg><use href="#logo"></use></svg></div>
+    <div class="bot-text">
+      <div class="msg-meta">CovanOS · ${model} <span>${clock()}</span></div>
+      ${html}
+      <div class="msg-actions"><button data-copy>${copy}</button><button data-regen>${regen}</button></div>
+    </div>`;
   chat.appendChild(el);
   chatScroll();
 }
@@ -218,6 +243,142 @@ if (chatForm) {
     }, 650);
   });
 }
+
+/* quick prompts */
+$$('#quickRow button').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (!chatInput || !chatForm) return;
+    setView('chat');
+    chatInput.value = (currentLang === 'en' ? btn.dataset.promptEn : btn.dataset.prompt) || '';
+    chatForm.requestSubmit();
+    chatInput.focus();
+  });
+});
+
+/* new chat */
+$('#newChatBtn')?.addEventListener('click', () => {
+  if (!chat) return;
+  chat.innerHTML = '';
+  $$('#appHistory .side-item').forEach((i) => i.classList.remove('active'));
+  const title = $('#chatTitle');
+  const sub = $('#chatSub');
+  if (title) title.textContent = currentLang === 'en' ? 'New chat' : 'Yeni sohbet';
+  if (sub) sub.textContent = currentLang === 'en' ? '0 messages · on your GPU' : "0 mesaj · senin GPU'nda";
+  addBot(currentLang === 'en'
+    ? '<p>What are we building today? Drop a file or start with a shortcut below.</p>'
+    : '<p>Bugün ne yapıyoruz? Bir dosya bırak veya aşağıdaki kısayoldan başla.</p>');
+  chatInput?.focus();
+  toast(msg('Yeni sohbet açıldı.', 'New chat opened.'));
+});
+
+/* search history */
+$('#chatSearch')?.addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  $$('#appHistory .side-item').forEach((item) => {
+    const text = item.innerText.toLowerCase();
+    item.style.display = !q || text.includes(q) ? 'flex' : 'none';
+  });
+});
+
+/* history */
+$$('#appHistory .side-item').forEach((item) => {
+  item.addEventListener('click', () => {
+    $$('#appHistory .side-item').forEach((i) => i.classList.remove('active'));
+    item.classList.add('active');
+    const title = item.querySelector('span')?.textContent || item.textContent;
+    if ($('#chatTitle')) $('#chatTitle').textContent = title;
+    if ($('#chatSub')) $('#chatSub').textContent = msg('Sohbet açıldı · demo', 'Conversation opened · demo');
+    toast(msg('Sohbet açıldı (demo).', 'Conversation opened (demo).'));
+  });
+});
+
+/* model selector */
+const modelSelect = $('#modelSelect');
+const modelMenu = $('#modelMenu');
+modelSelect?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = modelMenu?.classList.toggle('open');
+  modelSelect.setAttribute('aria-expanded', String(Boolean(open)));
+});
+$$('#modelMenu [data-model]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const name = btn.dataset.model;
+    if ($('#modelName')) $('#modelName').textContent = name;
+    $$('#modelMenu [data-model]').forEach((b) => b.classList.toggle('active', b === btn));
+    $$('[data-model-chip]').forEach((chip) => chip.classList.toggle('active', chip.dataset.modelChip === name));
+    modelMenu?.classList.remove('open');
+    modelSelect?.setAttribute('aria-expanded', 'false');
+    toast(msg(`Model değiştirildi: ${name}`, `Model changed: ${name}`));
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.model-wrap')) {
+    modelMenu?.classList.remove('open');
+    modelSelect?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* model chips in overview */
+$$('[data-model-chip]').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    const name = chip.dataset.modelChip;
+    if ($('#modelName')) $('#modelName').textContent = name;
+    $$('[data-model-chip]').forEach((c) => c.classList.toggle('active', c === chip));
+    $$('#modelMenu [data-model]').forEach((b) => b.classList.toggle('active', b.dataset.model === name));
+    toast(msg(`Model değiştirildi: ${name}`, `Model changed: ${name}`));
+  });
+});
+
+/* message actions */
+chat?.addEventListener('click', (e) => {
+  const copyBtn = e.target.closest('[data-copy]');
+  if (copyBtn) {
+    const box = copyBtn.closest('.bot-text');
+    if (box) {
+      const clone = box.cloneNode(true);
+      clone.querySelector('.msg-actions')?.remove();
+      clone.querySelector('.msg-meta')?.remove();
+      const text = clone.textContent.trim();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+          .then(() => toast(msg('Yanıt kopyalandı.', 'Response copied.')))
+          .catch(() => toast(msg('Kopyalanamadı.', 'Could not copy.')));
+      } else {
+        toast(msg('Kopyalanamadı.', 'Could not copy.'));
+      }
+    }
+  }
+  const regenBtn = e.target.closest('[data-regen]');
+  if (regenBtn) {
+    toast(msg('Yeniden üretildi (demo).', 'Regenerated (demo).'));
+  }
+});
+
+/* small demo affordances */
+$('.workspace-menu')?.addEventListener('click', () => toast(msg('Çalışma alanı menüsü (demo).', 'Workspace menu (demo).')));
+$$('.input-icon').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const label = btn.getAttribute('aria-label') || '';
+    const isMic = label.toLowerCase().includes('mikrofon') || label.toLowerCase().includes('mic');
+    toast(isMic
+      ? msg('Sesli giriş demo.', 'Voice input demo.')
+      : msg('Dosya ekleme demo.', 'File upload demo.'));
+  });
+});
+
+/* panel / chat toolbar actions */
+$$('[data-action]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    const labels = {
+      share: msg('Paylaşım bağlantısı kopyalandı (demo).', 'Share link copied (demo).'),
+      export: msg('Dışa aktarma hazır (demo).', 'Export ready (demo).'),
+      rules: msg('Pazar yeri kuralları açıldı (demo).', 'Marketplace rules opened (demo).'),
+      report: msg('Rapor indirildi (demo).', 'Report downloaded (demo).'),
+    };
+    toast(labels[action] || msg('Demo aksiyonu.', 'Demo action.'));
+  });
+});
 
 /* ---------- utilization ---------- */
 const GPU_PRICE = 399;
@@ -311,6 +472,12 @@ function renderConfig(resetChips = false) {
   if (sumGpu) sumGpu.textContent = config.gpu;
   if (sumRam) sumRam.textContent = ramLabel(config.ram);
   if (sumStorage) sumStorage.textContent = `${config.storage} TB`;
+
+  const slider = $('#budgetSlider');
+  if (slider) {
+    const pct = ((config.budget - 1000) / 49000) * 100;
+    slider.style.setProperty('--fill', `${Math.max(0, Math.min(100, pct))}%`);
+  }
 
   setActiveChip('#ramChips', 'ram', config.ram);
   setActiveChip('#storageChips', 'storage', config.storage);
@@ -412,7 +579,13 @@ function translatePage(lang) {
     const source = originalText.get(node);
     const key = source.trim();
     if (!key) return;
-    const out = lang === 'en' ? (I18N_EN[key] || key) : key;
+    let out = lang === 'en' ? (I18N_EN[key] || key) : key;
+    if (lang === 'en') {
+      out = out
+        .replace(/\bdk\b/g, 'min')
+        .replace(/\bsırada\b/g, 'queued')
+        .replace(/\bkanıt\b/g, 'proof');
+    }
     if (out !== key) node.nodeValue = source.replace(key, out);
     else node.nodeValue = source;
   });
