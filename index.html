@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COVAN — Yapay zekâ, kendi donanımında.</title>
+  <meta name="description" content="Covan: kendi GPU'n, bizim veri merkezimizde. Bir kez öde, limitsiz kullan, boşta kiralayıp bakımını öde.">
+  <meta name="theme-color" content="#111111">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 150 170">
+    <circle cx="45" cy="38" r="27" fill="none" stroke="currentColor" stroke-width="10"/>
+    <circle cx="105" cy="38" r="27" fill="none" stroke="currentColor" stroke-width="10"/>
+    <rect x="22" y="80" width="106" height="20" rx="10" fill="#FFC400"/>
+    <rect x="32" y="110" width="86" height="18" rx="9" fill="currentColor"/>
+    <rect x="46" y="138" width="58" height="16" rx="8" fill="#FFC400"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4.5 13.2h6L9 22l9-12h-6.2L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5l8 3.2v5.6c0 5-3.4 8.4-8 10.2-4.6-1.8-8-5.2-8-10.2V5.7l8-3.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 12l2.4 2.4 4.8-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="18" height="6" rx="1.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="7" r="1" fill="currentColor"/><circle cx="7" cy="17" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a class="brand" href="#top" aria-label="Covan ana sayfa">
+      <svg class="brand-logo" aria-hidden="true"><use href="#logo"/></svg>
+      <span>covan</span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Ana menü">
+      <a href="#how">Nasıl çalışır</a>
+      <a href="#os">CovanOS</a>
+      <a href="#earn">Kazanç</a>
+      <a href="#trust">Güven</a>
+      <a href="#faq">SSS</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-small btn-ghost" data-open-app>CovanOS'u dene</button>
+      <a href="#waitlist" class="btn btn-small btn-primary">Waitlist</a>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+      <button class="menu-btn" id="menuBtn" aria-label="Menüyü aç" aria-expanded="false">
+        <svg><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="live-dot"></span> SAVE THE FUTURE 2035 · COVAN</div>
+        <h1>Yapay zekâ,<br><span class="hl">kendi donanımında.</span></h1>
+        <p class="hero-sub">Bir kez öde. Biz barındırırız. Sen kullanırsın. Boşta kalınca kiralar, <strong>bakımını öder.</strong></p>
+        <div class="hero-cta">
+          <a href="#waitlist" class="btn btn-primary btn-lg">Kutunu yapılandır <svg><use href="#i-arrow"/></svg></a>
+          <button class="btn btn-ghost btn-lg" data-open-app>CovanOS'u gör</button>
+        </div>
+        <div class="hero-meta">
+          <span><b>16–320 GB</b> GPU</span>
+          <span><b>$1K–$50K</b> bütçe</span>
+          <span><b>64 GB–1 TB</b> RAM</span>
+          <span><b>limitsiz</b> kullanım</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="rack-stage">
+          <div class="rack-glow"></div>
+          <div class="rack" aria-hidden="true">
+            <div class="rack-top"><span></span><span></span><span></span></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot active"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="slot"><i></i><b></b></div>
+            <div class="rack-base"></div>
+          </div>
+          <div class="gpu-tag">
+            <b>Selim'in GPU'su</b>
+            <span>#0427 · 16 GB · İstanbul-1</span>
+          </div>
+          <div class="mini-os" aria-hidden="true">
+            <div class="mini-head"><span class="mini-dots"><i></i><i></i><i></i></span> CovanOS <em>●</em></div>
+            <div class="mini-model">Qwen3 14B · senin GPU'nda</div>
+            <div class="mini-line"></div>
+            <div class="mini-line short"></div>
+            <div class="mini-input">Covan'a sor <span>↑</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>EV SENİN</span><i>✦</i><span>ARABA SENİN</span><i>✦</i><span class="y">YAPAY ZEKÂ SENİN</span><i>✦</i>
+      <span>EV SENİN</span><i>✦</i><span>ARABA SENİN</span><i>✦</i><span class="y">YAPAY ZEKÂ SENİN</span><i>✦</i>
+      <span>EV SENİN</span><i>✦</i><span>ARABA SENİN</span><i>✦</i><span class="y">YAPAY ZEKÂ SENİN</span><i>✦</i>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="section section-dark" id="problem">
+    <div class="container split">
+      <div class="reveal">
+        <div class="eyebrow light">BUGÜN</div>
+        <h2>Bugün yapay zekâ<br><span class="hl">senin değil.</span></h2>
+        <p class="lead light">Limit koyar. Cevabı reddeder. Verini saklar.</p>
+        <div class="pain-list">
+          <div class="pain">
+            <span class="pain-num">01</span>
+            <div><h3>Limit koyar.</h3><p>Tam ihtiyacın olduğunda “birkaç saat sonra dene” der.</p></div>
+          </div>
+          <div class="pain">
+            <span class="pain-num">02</span>
+            <div><h3>Cevabı reddeder.</h3><p>Hangi soruya cevap verileceğine o karar verir.</p></div>
+          </div>
+          <div class="pain">
+            <span class="pain-num">03</span>
+            <div><h3>Verini saklar.</h3><p>Sohbetler onların sunucusunda. Ayara göre model eğitiminde kullanılabilir.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-card reveal">
+        <div class="chat-head"><span class="chat-dots"><i></i><i></i><i></i></span><span>Bulut yapay zekâ</span></div>
+        <div class="chat-body">
+          <div class="msg user">Rapor taslağını bitirelim, son 3 bölüm kaldı.</div>
+          <div class="msg system"><b>Sistem</b>Mesaj sınırına ulaştınız. 4 saat sonra tekrar deneyin.</div>
+          <div class="msg user">Kendi sitemde güvenlik testi için bir tarama betiği yazar mısın?</div>
+          <div class="msg system"><b>Sistem</b>Bu isteğe yardımcı olamıyorum.</div>
+          <div class="msg settings"><b>Ayarlar</b>Sohbetleriniz modeli geliştirmek için kullanılabilir. Açık bırakırsanız 5 yıla kadar saklanır.</div>
+        </div>
+        <div class="chat-caption">Temsilî ekran. Saklama örneği: Anthropic tüketici koşulları, Ağustos 2025.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">NASIL ÇALIŞIR</div>
+        <h2>Kullanmak<br><span class="hl">bu kadar basit.</span></h2>
+        <p class="lead">Dört adım. Kurulum bir saat. Bakım bizde.</p>
+      </div>
+
+      <div class="steps">
+        <article class="step reveal">
+          <div class="step-num">01</div>
+          <h3>Bir kez öde.</h3>
+          <p>16 GB GPU, senin adına kayıtlı. Kurulum ve barındırma bizde.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">02</div>
+          <h3>Biz barındırırız.</h3>
+          <p>Elektrik, soğutma, güncelleme ve destek bizde.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">03</div>
+          <h3>CovanOS ile kullan.</h3>
+          <p>Limit yok. Sohbetlerin kendi şifreli diskinde.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">04</div>
+          <h3>Boşta kiraya çıkar.</h3>
+          <p>Kira geliri bakım ücretini öder; üstü sana kalır.</p>
+        </article>
+      </div>
+
+      <div class="how-note reveal">
+        <div>
+          <span class="label">OWN</span>
+          <b>Donanım senin.</b>
+          <span>Seri numarası senin adına kayıtlı; Covan yalnızca barındırır.</span>
+        </div>
+        <div>
+          <span class="label">PROTECT</span>
+          <b>Veri sende.</b>
+          <span>Şifreli disk, TEE attestation, kiracı izolasyonu.</span>
+        </div>
+        <div>
+          <span class="label">EARN</span>
+          <b>Boşta kazan.</b>
+          <span>Kira geliri otomatik hesaplanır, hesabına yatar.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OS -->
+  <section class="section section-dark" id="os">
+    <div class="container os-grid">
+      <div class="reveal">
+        <div class="eyebrow light">COVANOS</div>
+        <h2>Kendi GPU'nda,<br><span class="hl">kendi işin.</span></h2>
+        <p class="lead light">Bildiğin sohbet arayüzü. Ama model senin kutunda, verin senin diskinde.</p>
+
+        <ul class="feature-list">
+          <li><b>CovanOS</b><span>Sohbet, doküman, kod. Limit yok.</span></li>
+          <li><b>CovanAPI</b><span>OpenAI uyumlu; kendi uygulamanı tek satırla bağla.</span></li>
+          <li><b>CovanCLI</b><span>Terminalden model çalıştır, kirayı yönet.</span></li>
+        </ul>
+
+        <button class="btn btn-primary" data-open-app>CovanOS'u tam ekran dene <svg><use href="#i-arrow"/></svg></button>
+      </div>
+
+      <div class="os-window reveal" aria-label="CovanOS önizleme">
+        <div class="os-titlebar">
+          <span class="os-dots"><i></i><i></i><i></i></span>
+          <span class="os-title">CovanOS</span>
+          <span class="os-live">● Çevrimiçi</span>
+        </div>
+        <div class="os-body">
+          <aside class="os-side">
+            <button class="new-chat">+ Yeni sohbet</button>
+            <div class="side-label">Bugün</div>
+            <div class="side-item active">Toplantı özeti</div>
+            <div class="side-item">Sunum taslağı</div>
+            <div class="side-label">Bu hafta</div>
+            <div class="side-item">Python hata ayıklama</div>
+            <div class="side-item">Kira sözleşmesi notları</div>
+            <div class="side-item">Ankara gezi planı</div>
+            <div class="gpu-card">
+              <b>GPU #0427</b>
+              <span>16 GB · İstanbul-1</span>
+              <em>● Çevrimiçi · sende</em>
+            </div>
+          </aside>
+          <div class="os-main">
+            <div class="os-top">
+              <span class="model-pill">Qwen3 14B · senin GPU'nda</span>
+              <span class="os-meta">Kullanım: <b>limitsiz</b></span>
+              <span class="os-meta">Depolama: <b>şifreli, sende</b></span>
+            </div>
+            <div class="os-chat">
+              <div class="msg user">Toplantı notlarımı 5 maddede özetle. <span class="file">toplanti_notlari.txt · 14 KB</span></div>
+              <div class="msg bot">
+                <div class="bot-avatar"><svg><use href="#logo"/></svg></div>
+                <ol>
+                  <li>Lansman tarihi 12 Kasım olarak kesinleşti.</li>
+                  <li>Pazarlama bütçesi yüzde 10 artırıldı.</li>
+                  <li>Tasarım ekibine iki kişi katılıyor.</li>
+                  <li>Müşteri demosu cuma günü yapılacak.</li>
+                  <li>Sonraki toplantı pazartesi saat 10:00.</li>
+                </ol>
+              </div>
+              <div class="typing" hidden><i></i><i></i><i></i></div>
+            </div>
+            <div class="os-input">Covan'a sor <span>↑</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EARN -->
+  <section class="section" id="earn">
+    <div class="container">
+      <div class="section-head center">
+        <div class="eyebrow">KAZANÇ</div>
+        <h2>Sen uyurken<br><span class="hl">GPU'n bakımını öder.</span></h2>
+        <p class="lead">Boşta kalan kapasite, seçilmiş kiracılara açılır. Senin payın otomatik yatır.</p>
+      </div>
+
+      <div class="earn-grid">
+        <div class="earn-card black">
+          <div class="earn-top"><span>Bu ay kira gelirin</span><strong data-owner>$55</strong><span class="unit">/ay</span></div>
+          <div class="earn-bar"><i data-owner-bar style="width:78%"></i></div>
+          <div class="earn-note"><span data-util-label>%40 doluluk</span> · 16 GB GPU · $0,27/saat</div>
+        </div>
+        <div class="earn-card">
+          <div class="earn-top"><span>Aylık bakım ücretin</span><strong>$25</strong><span class="unit">/ay</span></div>
+          <div class="earn-bar gray"><i style="width:45%"></i></div>
+          <div class="earn-note">Elektrik, soğutma, güncelleme, destek.</div>
+        </div>
+        <div class="earn-card yellow">
+          <div class="earn-top"><span>Net kazancın</span><strong data-net>$30</strong><span class="unit">/ay</span></div>
+          <div class="earn-bar dark"><i data-net-bar style="width:55%"></i></div>
+          <div class="earn-note">Bakımı öder, üstüne kalır.</div>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal">
+        <div class="timeline-head">
+          <span>GPU #0427 · bir gün</span>
+          <div class="legend">
+            <span><i class="you"></i> Sen kullanıyorsun</span>
+            <span><i class="rent"></i> Kirada: girişimler, araştırmacılar</span>
+            <span><i class="idle"></i> Boşta</span>
+          </div>
+        </div>
+        <div class="hours" aria-hidden="true">
+          <i class="you"></i><i class="you"></i><i class="you"></i><i class="you"></i><i class="you"></i><i class="you"></i><i class="you"></i><i class="idle"></i>
+          <i class="you"></i><i class="you"></i><i class="you"></i><i class="idle"></i><i class="rent"></i><i class="rent"></i><i class="rent"></i><i class="rent"></i>
+          <i class="rent"></i><i class="rent"></i><i class="rent"></i><i class="idle"></i><i class="you"></i><i class="you"></i><i class="you"></i><i class="you"></i>
+        </div>
+        <div class="hour-labels"><span>00:00</span><span>03:00</span><span>06:00</span><span>09:00</span><span>12:00</span><span>15:00</span><span>18:00</span><span>21:00</span></div>
+        <div class="earn-controls">
+          <span class="control-label">Doluluk:</span>
+          <button class="util-btn" data-util="30">%30</button>
+          <button class="util-btn active" data-util="40">%40</button>
+          <button class="util-btn" data-util="50">%50</button>
+          <span class="payback">Geri ödeme: <b data-payback>~14 ay</b></span>
+        </div>
+      </div>
+
+      <div class="earn-foot">
+        <span>Kiracı yalnızca işlem gücünü kullanır. Diskin ve sohbetlerin asla paylaşılmaz.</span>
+        <button class="text-link" data-open-app data-tab="earnings">CovanOS'ta canlı gör <svg><use href="#i-arrow"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="section section-dark" id="trust">
+    <div class="container split trust-grid">
+      <div class="reveal">
+        <div class="eyebrow light">GÜVEN</div>
+        <h2 class="h2-sm">Veri sende kalır.<br><span class="hl">Kapasite ağa açılır.</span></h2>
+        <p class="lead light">Kiracı yalnızca işlem gücünü kullanır. Diskin, sohbetlerin ve anahtarın sende kalır.</p>
+
+        <ul class="trust-list">
+          <li><span class="trust-ico"><svg><use href="#i-shield"/></svg></span><div><b>TEE + uzaktan kanıtlama</b><span>Kutunun doğru çalıştığını matematikle kanıtlar.</span></div></li>
+          <li><span class="trust-ico"><svg><use href="#i-lock"/></svg></span><div><b>Şifreli disk, anahtar sende</b><span>Covan içeriği okuyamaz; yalnızca metadata görür.</span></div></li>
+          <li><span class="trust-ico"><svg><use href="#i-server"/></svg></span><div><b>Kiracı konteyneri + silme kanıtı</b><span>İş bitince konteyner ve veri silinir; kanıtı kalır.</span></div></li>
+        </ul>
+
+        <button class="btn btn-primary" data-open-app data-tab="trust">Trust Center'ı gör <svg><use href="#i-arrow"/></svg></button>
+      </div>
+
+      <div class="trust-diagram reveal" aria-label="Güven mimarisi">
+        <div class="trust-box owner">
+          <span class="tag">SAHİP</span>
+          <h3>Senin kasası</h3>
+          <p>Şifreli disk · yerel model · API</p>
+        </div>
+        <div class="trust-connector"><span>metadata</span><i>→</i></div>
+        <div class="trust-box control">
+          <span class="tag">CONTROL PLANE</span>
+          <h3>Sadece yönetir</h3>
+          <p>Kimlik · scheduler · fatura</p>
+        </div>
+        <div class="trust-connector"><i>←</i><span>iş yükü</span></div>
+        <div class="trust-box tenant">
+          <span class="tag">KİRACI</span>
+          <h3>Geçici konteyner</h3>
+          <p>İş bitince silinir</p>
+        </div>
+        <div class="trust-seal">TEE · attestation · deletion proof</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+<section class="section" id="waitlist">
+  <div class="container">
+    <div class="preorder-head">
+      <div class="reveal">
+        <div class="eyebrow" data-i18n="waitlist.eyebrow">WAITLIST</div>
+        <h2 data-i18n-html="waitlist.title">İlk raf için<br><span class="hl">waitlist.</span></h2>
+        <p class="lead" data-i18n="waitlist.lead">Ödeme yok. Sadece hangi sistemi istediğini ve ne kadar ödemeye razı olduğunu soruyoruz.</p>
+      </div>
+      <div class="progress-card reveal">
+        <div class="progress-top"><b>37 / 100</b><span data-i18n="waitlist.progress">ilk raf: 50 GPU</span></div>
+        <div class="progress"><i style="width:37%"></i></div>
+        <div class="progress-note" data-i18n="waitlist.progressNote">Demo verisi · gerçek waitlist sayacı değildir.</div>
+      </div>
+    </div>
+
+    <div class="configurator reveal">
+      <div class="config-main">
+        <div class="config-head">
+          <div>
+            <span class="label" data-i18n="config.budgetLabel">BÜTÇENİZ</span>
+            <p class="config-hint" data-i18n="config.budgetHint">1.000–50.000 $ arası bir sistem seçin.</p>
+          </div>
+          <div class="config-total">
+            <b id="budgetValue">$7.000</b>
+            <em data-i18n="config.budgetNote">tahmini bütçe</em>
+          </div>
+        </div>
+
+        <input class="budget-slider" id="budgetSlider" type="range" min="1000" max="50000" step="500" value="7000" aria-label="Sistem bütçesi">
+        <div class="slider-labels">
+          <span style="left:0;transform:none;">$1K</span>
+          <span style="left:8.16%;">$5K</span>
+          <span style="left:18.37%;">$10K</span>
+          <span style="left:48.98%;">$25K</span>
+          <span style="left:100%;transform:translateX(-100%);">$50K</span>
+        </div>
+
+        <div class="config-grid">
+          <div class="config-block">
+            <span class="label">GPU</span>
+            <b id="configGpu">48 GB GPU</b>
+            <span id="configNote">Fine-tuning / yoğun inference</span>
+          </div>
+
+          <div class="config-block">
+            <span class="label">RAM</span>
+            <div class="chip-row" id="ramChips">
+              <button class="chip" data-ram="64">64 GB</button>
+              <button class="chip" data-ram="128">128 GB</button>
+              <button class="chip active" data-ram="256">256 GB</button>
+              <button class="chip" data-ram="512">512 GB</button>
+              <button class="chip" data-ram="1024">1 TB</button>
+            </div>
+            <span class="config-sub" data-i18n="config.ramHint">Pilot için tercihini seç.</span>
+          </div>
+
+          <div class="config-block">
+            <span class="label" data-i18n="config.storage">DEPOLAMA</span>
+            <div class="chip-row" id="storageChips">
+              <button class="chip" data-storage="2">2 TB</button>
+              <button class="chip" data-storage="4">4 TB</button>
+              <button class="chip active" data-storage="8">8 TB</button>
+              <button class="chip" data-storage="16">16 TB</button>
+              <button class="chip" data-storage="32">32 TB</button>
+            </div>
+            <span class="config-sub" data-i18n="config.storageHint">Model ve veri seti boyutuna göre.</span>
+          </div>
+        </div>
+
+        <div class="config-summary">
+          <div><span>GPU</span><b id="sumGpu">48 GB</b></div>
+          <div><span>RAM</span><b id="sumRam">256 GB</b></div>
+          <div><span data-i18n="config.disk">Disk</span><b id="sumStorage">8 TB</b></div>
+          <div><span data-i18n="config.budget">Bütçe</span><b id="sumBudget">$7.000</b></div>
+        </div>
+
+        <div class="waitlist-actions">
+          <button class="btn btn-primary btn-lg" data-waitlist>
+            <span data-i18n="config.cta">Waitlist'e katıl</span>
+            <svg><use href="#i-arrow"/></svg>
+          </button>
+          <span class="waitlist-note" data-i18n="config.note">Ödeme alınmaz. Sadece erken erişim ve fiyat görüşü.</span>
+        </div>
+      </div>
+
+      <aside class="config-side">
+        <div class="config-side-card black">
+          <span class="label yellow" data-i18n="config.why">NEDEN WAITLIST?</span>
+          <h3 data-i18n="config.whyTitle">İlk 50 GPU'luk rafı birlikte planlıyoruz.</h3>
+          <p data-i18n="config.whyText">Hangi konfigürasyonun gerçekten istendiğini görmek için bütçeyi ve RAM ihtiyacını soruyoruz.</p>
+        </div>
+        <div class="config-side-card">
+          <span class="label" data-i18n="config.examples">ÖRNEK KONFİGÜRASYONLAR</span>
+          <div class="example-row"><span>16 GB · 64 GB RAM · 2 TB</span><b>$1K</b></div>
+          <div class="example-row"><span>48 GB · 256 GB RAM · 8 TB</span><b>$7K</b></div>
+          <div class="example-row"><span>80 GB · 512 GB RAM · 16 TB</span><b>$15K</b></div>
+          <div class="example-row"><span>4×80 GB · 1 TB RAM · 32 TB</span><b>$45K</b></div>
+          <p class="tiny" data-i18n="config.examplesNote">Fiyatlar temsilîdir; nihai fiyat pilotta netleşecek.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+  <!-- FAQ -->
+  <section class="section section-soft" id="faq">
+    <div class="container faq-wrap">
+      <div class="section-head">
+        <div class="eyebrow">SSS</div>
+        <h2>Merak edilenler.</h2>
+      </div>
+      <details class="faq-item" open>
+        <summary>GPU gerçekten benim mi?<svg><use href="#i-chev"/></svg></summary>
+        <p>Seri numarası senin adına kayıtlı. Covan yalnızca barındırır; istersen 30 gün içinde çıkarıp teslim alırsın. Sigorta ve çıkış garantisi sözleşmede.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Verim güvende mi?<svg><use href="#i-chev"/></svg></summary>
+        <p>Disk şifreli, anahtar sende. Covan içeriği okuyamaz; yalnızca metadata, sağlık ve fatura verisini görür. Kiracı iş yükleri geçici konteynerlerde çalışır.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Kiralama talebi olmazsa ne olur?<svg><use href="#i-chev"/></svg></summary>
+        <p>Bakım ücretini ödersin; kira geliri garanti değil. İlk 12 ay minimum doluluk hedefi ve kurumsal kiracı sözleşmeleriyle riski azaltıyoruz.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Hangi modeller çalışıyor?<svg><use href="#i-chev"/></svg></summary>
+        <p>Qwen3 14B dahil açık kaynak modeller. 16 GB GPU'da quantized 14B-32B; 2028'de 24 GB ile 70B sınıfı hedefleniyor.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Ne zaman geliyor?<svg><use href="#i-chev"/></svg></summary>
+        <p>İlk raf 2026 Q2: 50 GPU, İstanbul. İlk 100 waitlist sırayla kurulur; ödeme pilotta alınır.</p>
+      </details>
+      <details class="faq-item">
+        <summary>İade / çıkış var mı?<svg><use href="#i-chev"/></svg></summary>
+        <p>30 gün cayma hakkı. Sonrasında donanım senin; Covan barındırmayı durdurur, cihazı kargolar. Lease'te erken çıkış koşulları sözleşmede.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="container center">
+      <div class="eyebrow">2035</div>
+      <h2>Bugün kullandığın<br>yapay zekâ <span class="hl">senin mi?</span></h2>
+      <p class="final-big">Covan ile, <span class="hl">evet.</span></p>
+      <a href="#waitlist" class="btn btn-primary btn-lg">Waitlist'e katıl <svg><use href="#i-arrow"/></svg></a>
+      <div class="final-meta">Takım Bee · SAVE THE FUTURE 2035 · 42 İstanbul Girişimcilik Kulübü</div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#top"><svg class="brand-logo"><use href="#logo"/></svg><span>covan</span></a>
+      <p>Yapay zekâ, kendi donanımında.</p>
+    </div>
+    <div><h4>Ürün</h4><a href="#os">CovanOS</a><a href="#earn">Kazanç</a><a href="#waitlist">Waitlist</a></div>
+    <div><h4>Şirket</h4><a href="#problem">Neden Covan?</a><a href="#trust">Güven</a><a href="#faq">SSS</a></div>
+    <div><h4>İletişim</h4><a href="mailto:merhaba@covan.ai">merhaba@covan.ai</a><span>İstanbul, Türkiye</span></div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Covan · Prototip — ödeme alınmaz.</span>
+    <span>Takım Bee · SAVE THE FUTURE 2035</span>
+  </div>
+</footer>
+
+<!-- WAITLIST MODAL -->
+<div class="modal" id="preorderModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" data-close-modal aria-label="Kapat"><svg><use href="#i-close"/></svg></button>
+    <div class="eyebrow">WAITLIST</div>
+    <h3 id="modalTitle">Waitlist'e katıl.</h3>
+    <p class="modal-sub">Ödeme yok. İlk rafa adını yaz; hangi sistemi istediğini soruyoruz.</p>
+    <div class="selected-plan" id="selectedConfig">48 GB GPU · 256 GB RAM · 8 TB · $7.000 bütçe</div>
+    <form id="preorderForm">
+      <label>Ad Soyad<input id="nameInput" type="text" placeholder="Adın Soyadın" required></label>
+      <label>E-posta<input id="emailInput" type="email" placeholder="ornek@mail.com" required></label>
+      <label>Şehir<input id="cityInput" type="text" placeholder="İstanbul"></label>
+      <label>Ne kadar ödemeyi düşünürsünüz? ($)
+        <input id="wtpInput" type="number" min="1000" max="50000" step="500" value="7000" required>
+      </label>
+      <label class="check"><input id="demoCheck" type="checkbox" required><span>Bunun bir prototip olduğunu ve ödeme alınmadığını anladım.</span></label>
+      <button class="btn btn-primary btn-block" type="submit">Waitlist'e katıl</button>
+    </form>
+    <div class="modal-success" id="modalSuccess" hidden>
+      <div class="success-icon"><svg><use href="#i-check"/></svg></div>
+      <h4>Adını ilk rafa yazdık.</h4>
+      <p id="successText">48 GB GPU · 256 GB RAM · 8 TB · $7.000 bütçe</p>
+      <button class="btn btn-ghost btn-block" data-close-modal>Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- COVANOS APP OVERLAY -->
+<div class="app-overlay" id="appOverlay" aria-hidden="true">
+  <div class="app-shell">
+    <aside class="app-side">
+      <div class="app-brand">
+        <svg class="brand-logo"><use href="#logo"/></svg>
+        <span>covan<em>OS</em></span>
+        <button class="app-close" data-close-app aria-label="Kapat"><svg><use href="#i-close"/></svg></button>
+      </div>
+      <nav class="app-nav">
+        <button class="active" data-view="chat">Sohbet</button>
+        <button data-view="panel">Panel</button>
+      </nav>
+      <div class="app-history">
+        <div class="side-label">Bugün</div>
+        <button class="side-item active">Toplantı özeti</button>
+        <button class="side-item">Sunum taslağı</button>
+        <div class="side-label">Bu hafta</div>
+        <button class="side-item">Python hata ayıklama</button>
+        <button class="side-item">Kira sözleşmesi notları</button>
+        <button class="side-item">Ankara gezi planı</button>
+      </div>
+      <div class="app-gpu">
+        <b>GPU #0427</b>
+        <span>16 GB · İstanbul-1</span>
+        <em>● Çevrimiçi · sende</em>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-topbar">
+        <span class="app-model">Qwen3 14B · senin GPU'nda</span>
+        <span class="app-badge">Kullanım: limitsiz</span>
+        <span class="app-badge">Depolama: şifreli, sende</span>
+        <button class="rent-toggle" id="rentToggle">Kira modu: kapalı</button>
+        <button class="app-panel-btn" id="appPanelBtn">Panel</button>
+      </div>
+
+      <section class="app-view active" data-panel-view="chat">
+        <div class="app-chat" id="appChat">
+          <div class="msg user">Toplantı notlarımı 5 maddede özetle. <span class="file">toplanti_notlari.txt · 14 KB</span></div>
+          <div class="msg bot">
+            <div class="bot-avatar"><svg><use href="#logo"/></svg></div>
+            <ol>
+              <li>Lansman tarihi 12 Kasım olarak kesinleşti.</li>
+              <li>Pazarlama bütçesi yüzde 10 artırıldı.</li>
+              <li>Tasarım ekibine iki kişi katılıyor.</li>
+              <li>Müşteri demosu cuma günü yapılacak.</li>
+              <li>Sonraki toplantı pazartesi saat 10:00.</li>
+            </ol>
+          </div>
+        </div>
+        <form class="app-input" id="chatForm">
+          <input id="chatInput" type="text" placeholder="Covan'a sor..." autocomplete="off">
+          <button type="submit" aria-label="Gönder">↑</button>
+        </form>
+        <p class="app-note">Model senin kutunda çalışıyor. Bu prototipte yanıtlar temsilîdir.</p>
+      </section>
+
+      <section class="app-view" data-panel-view="panel">
+        <div class="panel-tabs">
+          <button class="active" data-tab-panel="overview">Genel Bakış</button>
+          <button data-tab-panel="market">Pazar Yeri</button>
+          <button data-tab-panel="earnings">Kazanç</button>
+          <button data-tab-panel="trust">Güven</button>
+        </div>
+
+        <div class="panel active" data-panel="overview">
+          <div class="panel-head"><div><h3>Genel Bakış</h3><p>Kutun çalışıyor. Veri sende.</p></div><span class="status-pill">● Aktif</span></div>
+          <div class="stat-grid">
+            <div class="stat"><span>Kullanım</span><b>%38</b><em>son 24 saat</em></div>
+            <div class="stat"><span>Bu ay kazanç</span><b>$55</b><em>+$30 net</em></div>
+            <div class="stat"><span>Veri cihazda</span><b>100%</b><em>0 dışarı aktarım</em></div>
+            <div class="stat"><span>Uptime</span><b>99,9%</b><em>son 30 gün</em></div>
+          </div>
+          <div class="panel-grid">
+            <div class="panel-card">
+              <h4>Uygulamalar</h4>
+              <div class="app-grid">
+                <button class="app-tile">Doküman Q&amp;A</button>
+                <button class="app-tile">Transkripsiyon</button>
+                <button class="app-tile">Sözleşme</button>
+                <button class="app-tile">Görsel</button>
+                <button class="app-tile">Kod</button>
+              </div>
+            </div>
+            <div class="panel-card dark-card">
+              <h4>API anahtarı</h4>
+              <code>sk-covan-••••-0427</code>
+              <button class="btn btn-small btn-primary" id="copyKey"><svg><use href="#i-copy"/></svg> Kopyala</button>
+              <p>OpenAI uyumlu endpoint. Kendi uygulamana bağla.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="market">
+          <div class="panel-head"><div><h3>Pazar Yeri</h3><p>Boşta kalan GPU'yu seçilmiş kiracılara aç.</p></div><button class="rent-toggle" id="rentToggle2">Kira modu: kapalı</button></div>
+          <div class="market-hero">
+            <div><span class="label">BU AY TAHMİNİ</span><b>$55</b><em>%40 doluluk · 16 GB GPU</em></div>
+            <div class="market-toggle"><span>Boşta kazan</span><button class="switch" id="marketSwitch" aria-label="Boşta kazan"><i></i></button></div>
+          </div>
+          <div class="job-list">
+            <div class="job"><span class="job-type">Batch inference</span><span>AI startup · 12 dk</span><b>$84</b><em class="ok">● attested</em></div>
+            <div class="job"><span class="job-type">Fine-tuning</span><span>Araştırma · 48 dk</span><b>$210</b><em class="ok">● attested</em></div>
+            <div class="job"><span class="job-type">Render</span><span>Stüdyo · 26 dk</span><b>$62</b><em class="pending">○ sırada</em></div>
+          </div>
+          <p class="panel-note">Kiracı yalnızca işlem gücünü kullanır. İş bitince konteyner silinir.</p>
+        </div>
+
+        <div class="panel" data-panel="earnings">
+          <div class="panel-head"><div><h3>Kazanç</h3><p>Kira geliri, bakım ve ödeme.</p></div><span class="status-pill">● Ödendi</span></div>
+          <div class="stat-grid">
+            <div class="stat"><span>Kira gelirin</span><b>$55</b><em>70% sahip payı</em></div>
+            <div class="stat"><span>Bakım</span><b>−$25</b><em>elektrik + destek</em></div>
+            <div class="stat"><span>Net</span><b>$30</b><em>hesabına yattı</em></div>
+            <div class="stat"><span>Geri ödeme</span><b>~14 ay</b><em>16 GB örnek</em></div>
+          </div>
+          <div class="panel-card">
+            <h4>Son 6 ay</h4>
+            <div class="mini-bars"><i style="height:32%"></i><i style="height:44%"></i><i style="height:38%"></i><i style="height:56%"></i><i style="height:61%"></i><i style="height:70%"></i></div>
+            <div class="bar-labels"><span>May</span><span>Haz</span><span>Tem</span><span>Ağu</span><span>Eyl</span><span>Eki</span></div>
+          </div>
+          <button class="btn btn-primary" id="payoutBtn">Ödemeyi al</button>
+        </div>
+
+        <div class="panel" data-panel="trust">
+          <div class="panel-head"><div><h3>Güven</h3><p>Kanıtlar, silme ve denetim.</p></div><span class="status-pill">● Doğrulandı</span></div>
+          <div class="trust-cards">
+            <div class="trust-card"><span class="label">TEE</span><b>Attestation</b><p>Kutu, doğru yazılımı çalıştırdığını kanıtladı.</p><em>son kontrol: 2 dk önce</em></div>
+            <div class="trust-card"><span class="label">DATA</span><b>Silme sertifikası</b><p>Son kiracı işi 18:42'de silindi.</p><em>kanıt: 0x8f…42c</em></div>
+            <div class="trust-card"><span class="label">AUDIT</span><b>Denetim izi</b><p>3 olay; yetkisiz erişim yok.</p><em>son 24 saat</em></div>
+          </div>
+          <div class="panel-card dark-card">
+            <h4>Trust Center</h4>
+            <p>Anahtar sende. Covan içeriği okuyamaz; yalnızca metadata görür.</p>
+            <button class="btn btn-small btn-primary" id="proofBtn">Kanıtı görüntüle</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
