@@ -461,7 +461,7 @@ section[id] { scroll-margin-top: 92px; }
 .config-main { background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
 .config-side { display: flex; flex-direction: column; gap: 14px; }
 .config-side-card { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 21px; }
-.config-side-card.black { background: var(--black); color: var(--white); border-color: var(--black); }
+.config-side-card.black { background: var(--black); color: var(--white); border-color: var(--black); flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .config-side-card.black h3 { color: var(--white); font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; margin-top: 10px; }
 .config-side-card.black p { color: #BDBDBD; font-size: 12px; line-height: 1.5; margin-top: 9px; }
 .config-side-card .tiny { font-size: 9px; color: #999; margin-top: 10px; line-height: 1.4; }
