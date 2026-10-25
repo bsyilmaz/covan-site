@@ -7,7 +7,7 @@
   <meta name="description" content="Covan: kendi GPU'n, bizim veri merkezimizde. Bir kez öde, limitsiz kullan, boşta kiralayıp bakımını öde.">
   <meta name="theme-color" content="#111111">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
 
@@ -42,6 +42,19 @@
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.2L20 10l-5.8 1.8L12 18l-2.2-6.2L4 10l5.8-1.8L12 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
 </svg>
 
+<div class="utility-bar">
+  <div class="container utility-inner">
+    <div class="utility-crumb mono">
+      <span class="u-brand">covan</span>
+      <span>/</span><span>istanbul-1</span>
+      <span>/</span><span>rack-a</span>
+      <span class="u-sep">·</span><span data-i18n="utility.firstRack">ilk raf: 50 GPU</span>
+      <span class="u-sep">·</span><span>Q2 2026</span>
+    </div>
+    <div class="utility-note mono" data-i18n="utility.demo">PROTOTİP · ÖDEME ALINMAZ</div>
+  </div>
+</div>
+
 <header class="site-header" id="siteHeader">
   <div class="container nav">
     <a class="brand" href="#top" aria-label="Covan ana sayfa">
@@ -73,11 +86,16 @@
     <div class="container hero-grid">
       <div class="hero-copy reveal">
         <div class="eyebrow"><span class="live-dot"></span> SAVE THE FUTURE 2035 · COVAN</div>
-        <h1>Yapay zekâ,<br><span class="hl">kendi donanımında.</span></h1>
+        <div class="address-chip">
+          <span class="chip-dot"></span>
+          <span class="mono" id="addressText">istanbul-1 / rack-a / slot-07 / gpu-0427</span>
+        </div>
+        <h1 class="lang-tr">GPU'nun bir<br><span class="hl">adresi</span> var.</h1>
+        <h1 class="lang-en">Your GPU<br>has an <span class="hl">address.</span></h1>
         <p class="hero-sub">Bir kez öde. Biz barındırırız. Sen kullanırsın. Boşta kalınca kiralar, <strong>bakımını öder.</strong></p>
         <div class="hero-cta">
           <a href="#waitlist" class="btn btn-primary btn-lg">Kutunu yapılandır <svg><use href="#i-arrow"/></svg></a>
-          <button class="btn btn-ghost btn-lg" data-open-app>CovanOS'u gör</button>
+          <button class="btn btn-ghost btn-lg" id="findGpuBtn">GPU'mu bul</button>
         </div>
         <div class="hero-meta">
           <span><b>16–320 GB</b> GPU</span>
@@ -88,36 +106,65 @@
       </div>
 
       <div class="hero-visual reveal">
-        <div class="rack-stage">
-          <div class="live-badge">canlı demo</div>
-          <div class="rack-glow"></div>
-          <div class="rack" aria-hidden="true">
-            <div class="rack-top"><span></span><span></span><span></span></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot active"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="slot"><i></i><b></b></div>
-            <div class="rack-base"></div>
+        <div class="rack-panel" id="rackPanel">
+          <div class="rack-panel-head">
+            <span class="mono"><span class="live-dot"></span> RACK A · İSTANBUL-1</span>
+            <span class="mono">CANLI GÖRÜNÜM · DEMO VERİ</span>
           </div>
-          <div class="gpu-tag">
-            <b>Selim'in GPU'su</b>
-            <span>#0427 · 16 GB · İstanbul-1</span>
+
+          <div class="rack-blueprint" id="rackBlueprint">
+            <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+            <div class="rack-stack" id="rackStack">
+              <button class="rack-unit" data-slot="1"><span class="unit-label">S01</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="2"><span class="unit-label">S02</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="3"><span class="unit-label">S03</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="4"><span class="unit-label">S04</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="5"><span class="unit-label">S05</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="6"><span class="unit-label">S06</span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit active" data-slot="7"><span class="unit-label">S07 <em id="slotYou">YOU</em></span><span class="unit-body"><i></i><b></b></span></button>
+              <button class="rack-unit" data-slot="8"><span class="unit-label">S08</span><span class="unit-body"><i></i><b></b></span></button>
+              <div class="rack-fans"><i></i><i></i><i></i></div>
+            </div>
+            <div class="xray-overlay mono"><span>GPU</span><span>NVMe</span><span>TEE</span></div>
           </div>
-          <div class="mini-os" aria-hidden="true">
-            <div class="mini-head"><span class="mini-dots"><i></i><i></i><i></i></span> CovanOS <em>●</em></div>
-            <div class="mini-model">Qwen3 14B · senin GPU'nda</div>
-            <div class="mini-line"></div>
-            <div class="mini-line short"></div>
-            <div class="mini-input">Covan'a sor <span>↑</span></div>
+
+          <div class="slot-strip" id="slotStrip">
+            <button class="slot-pill" data-slot="1"><b>S01</b><i></i></button>
+            <button class="slot-pill" data-slot="2"><b>S02</b><i></i></button>
+            <button class="slot-pill" data-slot="3"><b>S03</b><i></i></button>
+            <button class="slot-pill" data-slot="4"><b>S04</b><i></i></button>
+            <button class="slot-pill" data-slot="5"><b>S05</b><i></i></button>
+            <button class="slot-pill" data-slot="6"><b>S06</b><i></i></button>
+            <button class="slot-pill active" data-slot="7"><b>S07</b><i></i></button>
+            <button class="slot-pill" data-slot="8"><b>S08</b><i></i></button>
+          </div>
+
+          <div class="slot-detail">
+            <div class="slot-copy">
+              <span class="mono slot-kicker" id="slotKicker">SLOT 07 · YOURS</span>
+              <h3 id="slotTitle">Selim'in GPU'su · #0427 · 16 GB</h3>
+              <p id="slotDesc">Kullanıyorsun. Diskin ve sohbetlerin sende kalır.</p>
+            </div>
+            <div class="slot-actions">
+              <button class="btn btn-small btn-ghost" id="liftSlot">Slotu kaldır</button>
+              <button class="btn btn-small btn-ghost" id="xraySlot">X-ray</button>
+              <button class="btn btn-small btn-ghost" id="rentSlot">Kira modu: kapalı</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- LIVE STATUS BAND -->
+  <div class="status-band">
+    <div class="container status-grid">
+      <div><span>Kullanım · son 24 saat</span><b>%38</b></div>
+      <div><span>Bu ay kazanç</span><b>$55</b><em>+$30 net</em></div>
+      <div><span>Veri cihazda</span><b>100%</b><em>0 dışarı aktarım</em></div>
+      <div><span>Uptime · son 30 gün</span><b>99,9%</b></div>
+    </div>
+  </div>
 
   <!-- MARQUEE -->
   <div class="marquee" aria-hidden="true">
@@ -132,7 +179,7 @@
   <section class="section section-dark" id="problem">
     <div class="container split">
       <div class="reveal">
-        <div class="eyebrow light">BUGÜN</div>
+        <div class="eyebrow light"><span class="eyebrow-num">01</span><i>/</i><span>BUGÜN</span></div>
         <h2>Bugün yapay zekâ<br><span class="hl">senin değil.</span></h2>
         <p class="lead light">Limit koyar. Cevabı reddeder. Verini saklar.</p>
         <div class="pain-list">
@@ -151,16 +198,20 @@
         </div>
       </div>
 
-      <div class="chat-card reveal">
-        <div class="chat-head"><span class="chat-dots"><i></i><i></i><i></i></span><span>Bulut yapay zekâ</span><span class="chat-limit">limitli</span></div>
-        <div class="chat-body">
-          <div class="msg user">Rapor taslağını bitirelim, son 3 bölüm kaldı.</div>
-          <div class="msg system"><b>Sistem</b>Mesaj sınırına ulaştınız. 4 saat sonra tekrar deneyin.</div>
-          <div class="msg user">Kendi sitemde güvenlik testi için bir tarama betiği yazar mısın?</div>
-          <div class="msg system"><b>Sistem</b>Bu isteğe yardımcı olamıyorum.</div>
-          <div class="msg settings"><b>Ayarlar</b>Sohbetleriniz modeli geliştirmek için kullanılabilir. Açık bırakırsanız 5 yıla kadar saklanır.</div>
+      <div class="terminal-card reveal">
+        <div class="terminal-head">
+          <span class="mono">cloud-ai — session log</span>
+          <span class="mono">temsilî</span>
         </div>
-        <div class="chat-caption">Temsilî ekran. Saklama örneği: Anthropic tüketici koşulları, Ağustos 2025.</div>
+        <div class="terminal-body mono">
+          <div class="t-line"><span class="t-you">you&gt;</span><span class="t-text">Rapor taslağını bitirelim, son 3 bölüm kaldı.</span></div>
+          <div class="t-line"><span class="t-tag limit">LIMIT</span><span class="t-text">Mesaj sınırına ulaştınız. 4 saat sonra tekrar deneyin.</span></div>
+          <div class="t-line"><span class="t-you">you&gt;</span><span class="t-text">Kendi sitemde güvenlik testi için bir tarama betiği yazar mısın?</span></div>
+          <div class="t-line"><span class="t-tag refused">REFUSED</span><span class="t-text">Bu isteğe yardımcı olamıyorum.</span></div>
+          <div class="t-line"><span class="t-tag retention">RETENTION</span><span class="t-text">Sohbetleriniz modeli geliştirmek için kullanılabilir. Açık bırakırsanız 5 yıla kadar saklanır.</span></div>
+          <div class="t-line"><span class="t-you">you&gt;</span><span class="t-caret">_</span></div>
+        </div>
+        <div class="terminal-foot">Temsilî ekran. Saklama örneği: Anthropic tüketici koşulları, Ağustos 2025.</div>
       </div>
     </div>
   </section>
@@ -169,7 +220,7 @@
   <section class="section" id="how">
     <div class="container">
       <div class="section-head">
-        <div class="eyebrow">NASIL ÇALIŞIR</div>
+        <div class="eyebrow"><span class="eyebrow-num">02</span><i>/</i><span>NASIL ÇALIŞIR</span></div>
         <h2>Kullanmak<br><span class="hl">bu kadar basit.</span></h2>
         <p class="lead">Dört adım. Kurulum bir saat. Bakım bizde.</p>
       </div>
@@ -221,7 +272,7 @@
   <section class="section section-dark" id="os">
     <div class="container os-grid">
       <div class="reveal">
-        <div class="eyebrow light">COVANOS</div>
+        <div class="eyebrow light"><span class="eyebrow-num">03</span><i>/</i><span>COVANOS</span></div>
         <h2 class="h2-sm">Kendi GPU'nda,<br><span class="hl">kendi işin.</span></h2>
         <p class="lead light">Bildiğin sohbet arayüzü. Ama model senin kutunda, verin senin diskinde.</p>
 
@@ -290,7 +341,7 @@
   <section class="section" id="earn">
     <div class="container">
       <div class="section-head center">
-        <div class="eyebrow">KAZANÇ</div>
+        <div class="eyebrow"><span class="eyebrow-num">04</span><i>/</i><span>KAZANÇ</span></div>
         <h2>Sen uyurken<br><span class="hl">GPU'n bakımını öder.</span></h2>
         <p class="lead">Boşta kalan kapasite, seçilmiş kiracılara açılır. Senin payın otomatik yatır.</p>
       </div>
@@ -348,7 +399,7 @@
   <section class="section section-dark" id="trust">
     <div class="container split trust-grid">
       <div class="reveal">
-        <div class="eyebrow light">GÜVEN</div>
+        <div class="eyebrow light"><span class="eyebrow-num">05</span><i>/</i><span>GÜVEN</span></div>
         <h2 class="h2-sm">Veri sende kalır.<br><span class="hl">Kapasite ağa açılır.</span></h2>
         <p class="lead light">Kiracı yalnızca işlem gücünü kullanır. Diskin, sohbetlerin ve anahtarın sende kalır.</p>
 
@@ -389,7 +440,7 @@
   <div class="container">
     <div class="preorder-head">
       <div class="reveal">
-        <div class="eyebrow" data-i18n="waitlist.eyebrow">WAITLIST</div>
+        <div class="eyebrow" data-i18n="waitlist.eyebrow"><span class="eyebrow-num">06</span><i>/</i><span>WAITLIST</span></div>
         <h2 data-i18n-html="waitlist.title">İlk raf için<br><span class="hl">waitlist.</span></h2>
         <p class="lead" data-i18n="waitlist.lead">Ödeme yok. Sadece hangi sistemi istediğini ve ne kadar ödemeye razı olduğunu soruyoruz.</p>
       </div>
@@ -455,13 +506,6 @@
           </div>
         </div>
 
-        <div class="config-summary">
-          <div><span>GPU</span><b id="sumGpu">48 GB</b></div>
-          <div><span>RAM</span><b id="sumRam">256 GB</b></div>
-          <div><span data-i18n="config.disk">Disk</span><b id="sumStorage">8 TB</b></div>
-          <div><span data-i18n="config.total">Toplam</span><b id="sumBudget">$7.000</b></div>
-        </div>
-
         <div class="waitlist-actions">
           <button class="btn btn-primary btn-lg" data-waitlist>
             <span data-i18n="config.cta">Waitlist'e katıl</span>
@@ -469,14 +513,30 @@
           </button>
           <span class="waitlist-note" data-i18n="config.note">Ödeme alınmaz. Sadece erken erişim ve fiyat görüşü.</span>
         </div>
+        <p class="config-disclaimer" data-i18n="config.disclaimer">Fiyatlar temsilîdir; nihai fiyat pilotta netleşecek.</p>
       </div>
 
       <aside class="config-side">
-        <div class="config-side-card black">
-          <span class="label yellow" data-i18n="config.why">NEDEN WAITLIST?</span>
-          <h3 data-i18n="config.whyTitle">İlk 50 GPU'luk rafı birlikte planlıyoruz.</h3>
-          <p data-i18n="config.whyText">Hangi konfigürasyonun gerçekten istendiğini görmek için bütçeyi ve RAM ihtiyacını soruyoruz.</p>
-          <div class="config-side-foot"><span>PILOT 01</span><span>İSTANBUL</span></div>
+        <div class="build-ticket">
+          <div class="ticket-stripe"></div>
+          <div class="ticket-head">
+            <span class="mono">BUILD TICKET</span>
+            <span class="mono">PILOT 01 · İSTANBUL</span>
+          </div>
+          <div class="ticket-body">
+            <div class="ticket-row"><span>GPU</span><b id="ticketGpu">48 GB</b></div>
+            <div class="ticket-row"><span>RAM</span><b id="ticketRam">256 GB</b></div>
+            <div class="ticket-row"><span>DISK</span><b id="ticketDisk">8 TB</b></div>
+            <div class="ticket-row"><span>FOR</span><b id="ticketFor">Fine-tuning / yoğun inference</b></div>
+            <div class="ticket-row ticket-total"><span>TOPLAM</span><b id="ticketTotal">$7.000</b></div>
+            <button class="btn btn-dark btn-block" data-waitlist>Waitlist'e katıl <svg><use href="#i-arrow"/></svg></button>
+            <p class="ticket-note">Ödeme yok. Erken erişim ve fiyat görüşü.</p>
+          </div>
+          <div class="ticket-foot"><span>PILOT 01</span><span>İSTANBUL</span></div>
+        </div>
+        <div class="ticket-why">
+          <span class="mono">NEDEN WAITLIST?</span>
+          <p>İlk 50 GPU'luk rafı birlikte planlıyoruz. Bütçeyi ve RAM ihtiyacını soruyoruz.</p>
         </div>
       </aside>
     </div>
@@ -488,7 +548,7 @@
   <section class="section section-soft" id="faq">
     <div class="container faq-wrap">
       <div class="section-head">
-        <div class="eyebrow">SSS</div>
+        <div class="eyebrow"><span class="eyebrow-num">07</span><i>/</i><span>SSS</span></div>
         <h2>Merak edilenler.</h2>
       </div>
       <details class="faq-item" open>
@@ -517,6 +577,8 @@
       </details>
     </div>
   </section>
+
+  <div class="hazard-strip" aria-hidden="true"></div>
 
   <!-- FINAL -->
   <section class="final">
@@ -897,8 +959,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=10"></script>
-<script src="app.js?v=10"></script>
+<script src="i18n.js?v=14"></script>
+<script src="app.js?v=14"></script>
 </body>
 </html>
 

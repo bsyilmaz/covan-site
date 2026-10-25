@@ -130,7 +130,7 @@ $$('.panel-tabs button').forEach((btn) => {
 let rentOn = false;
 function setRent(on, announce = true) {
   rentOn = on;
-  $$('#rentToggle, #rentToggle2').forEach((btn) => {
+  $$('#rentToggle, #rentToggle2, #rentSlot').forEach((btn) => {
     btn.classList.toggle('on', on);
     btn.textContent = on
       ? (currentLang === 'en' ? 'Rental mode: on' : 'Kira modu: açık')
@@ -486,6 +486,17 @@ function renderConfig(resetChips = false) {
     breakdown.textContent = `GPU ${money(tier.price)} · RAM ${signed(ramDelta)} · ${diskWord} ${signed(storageDelta)}`;
   }
 
+  const ticketGpu = $('#ticketGpu');
+  const ticketRam = $('#ticketRam');
+  const ticketDisk = $('#ticketDisk');
+  const ticketFor = $('#ticketFor');
+  const ticketTotal = $('#ticketTotal');
+  if (ticketGpu) ticketGpu.textContent = config.gpu;
+  if (ticketRam) ticketRam.textContent = ramLabel(config.ram);
+  if (ticketDisk) ticketDisk.textContent = `${config.storage} TB`;
+  if (ticketFor) ticketFor.textContent = config.note;
+  if (ticketTotal) ticketTotal.textContent = money(config.price);
+
   const slider = $('#budgetSlider');
   if (slider) {
     const pct = ((config.budget - 1000) / 49000) * 100;
@@ -517,6 +528,93 @@ $$('#storageChips .chip').forEach((chip) => {
   });
 });
 renderConfig(true);
+
+/* ---------- rack slots ---------- */
+const slotIds = {
+  1: '0401', 2: '0402', 3: '0403', 4: '0404',
+  5: '0405', 6: '0406', 7: '0427', 8: '0408',
+};
+let activeSlot = 7;
+let slotLifted = false;
+
+function selectSlot(n) {
+  if (!slotIds[n]) return;
+  activeSlot = n;
+  const isYours = n === 7;
+
+  $$('.rack-unit').forEach((unit) => {
+    unit.classList.toggle('active', Number(unit.dataset.slot) === n);
+    unit.classList.remove('lifted');
+  });
+  $$('.slot-pill').forEach((pill) => {
+    pill.classList.toggle('active', Number(pill.dataset.slot) === n);
+  });
+  slotLifted = false;
+
+  const address = $('#addressText');
+  if (address) address.textContent = `istanbul-1 / rack-a / slot-0${n} / gpu-${slotIds[n]}`;
+
+  const you = $('#slotYou');
+  if (you) you.textContent = currentLang === 'en' ? 'YOU' : 'SENİN';
+
+  const kicker = $('#slotKicker');
+  if (kicker) {
+    kicker.textContent = isYours
+      ? (currentLang === 'en' ? 'SLOT 07 · YOURS' : 'SLOT 07 · SENİN')
+      : `SLOT 0${n} · DEMO`;
+  }
+  const title = $('#slotTitle');
+  if (title) {
+    title.textContent = isYours
+      ? (currentLang === 'en' ? "Selim's GPU · #0427 · 16 GB" : "Selim'in GPU'su · #0427 · 16 GB")
+      : `Slot 0${n} · demo`;
+  }
+  const desc = $('#slotDesc');
+  if (desc) {
+    desc.textContent = isYours
+      ? (currentLang === 'en' ? "You're using it. Your disk and chats stay with you." : 'Kullanıyorsun. Diskin ve sohbetlerin sende kalır.')
+      : (currentLang === 'en' ? 'This slot is a demo.' : 'Bu slot şu an demo.');
+  }
+  const lift = $('#liftSlot');
+  if (lift) lift.textContent = currentLang === 'en' ? 'Lift slot' : 'Slotu kaldır';
+}
+
+$$('.rack-unit, .slot-pill').forEach((btn) => {
+  btn.addEventListener('click', () => selectSlot(Number(btn.dataset.slot)));
+});
+
+$('#findGpuBtn')?.addEventListener('click', () => {
+  selectSlot(7);
+  const panel = $('#rackPanel');
+  panel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  panel?.classList.add('flash');
+  setTimeout(() => panel?.classList.remove('flash'), 1400);
+  toast(msg('Slot 07 senin.', 'Slot 07 is yours.'));
+});
+
+$('#liftSlot')?.addEventListener('click', (e) => {
+  const unit = $('.rack-unit.active');
+  if (!unit) return;
+  slotLifted = !slotLifted;
+  unit.classList.toggle('lifted', slotLifted);
+  e.currentTarget.textContent = slotLifted
+    ? (currentLang === 'en' ? 'Seat slot' : 'Slotu geri tak')
+    : (currentLang === 'en' ? 'Lift slot' : 'Slotu kaldır');
+  toast(slotLifted
+    ? msg('Slot kaldırıldı (demo).', 'Slot lifted (demo).')
+    : msg('Slot yerine takıldı (demo).', 'Slot seated (demo).'));
+});
+
+$('#xraySlot')?.addEventListener('click', (e) => {
+  const blueprint = $('#rackBlueprint');
+  const on = blueprint?.classList.toggle('xray');
+  e.currentTarget.classList.toggle('on', Boolean(on));
+  toast(on ? msg('X-ray açık (demo).', 'X-ray on (demo).') : msg('X-ray kapalı.', 'X-ray off.'));
+});
+
+$('#rentSlot')?.addEventListener('click', () => setRent(!rentOn));
+
+selectSlot(7);
 
 /* ---------- waitlist modal ---------- */
 function updateSelectedConfig() {
@@ -637,6 +735,7 @@ function setLang(lang, persist = true) {
   updateUtil(currentUtil);
   setRent(rentOn, false);
   updateSelectedConfig();
+  selectSlot(activeSlot);
   const activeView = $('.app-view.active')?.dataset.panelView || 'chat';
   setView(activeView);
 }
